@@ -1252,11 +1252,12 @@
     Sound.back();                        /* Back / Cancel sound */
   }
   function playFromBp() {
-    Sound.stopAll();                     /* Play is silent so the game's own audio isn't disturbed */
+    Sound.launch();                      /* game start sound */
     launchGame(games[bpIndex]);
   }
   $("bpPlay").addEventListener("click", playFromBp);
   $("bpBack").addEventListener("click", closeDetails);
+  bpDetails.addEventListener("click", (e) => { if (e.target === bpDetails) closeDetails(); });
   $("bpPlay").addEventListener("mouseenter", () => { if (detailFocus !== 0) Sound.nav(); setFocus(0); });
   $("bpBack").addEventListener("mouseenter", () => { if (detailFocus !== 1) Sound.nav(); setFocus(1); });
   $("bpPrev").addEventListener("click", () => bpMove(-1));
@@ -1322,7 +1323,9 @@
 
   /* Holding Esc (or the browser's own exit) leaves fullscreen -> leave Big Picture too */
   document.addEventListener("fullscreenchange", () => {
-    if (!document.fullscreenElement && bpState !== "closed" && !player.classList.contains("open")) exitBP(false);
+    if (document.fullscreenElement || bpState === "closed" || player.classList.contains("open")) return;
+    if (bpState === "details") closeDetails();       /* Esc in the details menu just goes Back */
+    else exitBP(false);
   });
 
   /* Clock */
@@ -1345,6 +1348,7 @@
 
   /* ---------- Keyboard: arrows + WASD ---------- */
   function bpKey(k, e) {
+    if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
     const left  = k === "arrowleft"  || k === "a";
     const right = k === "arrowright" || k === "d";
     const ok    = k === "enter" || k === " " || k === "e";
