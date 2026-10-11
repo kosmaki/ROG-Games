@@ -13,9 +13,18 @@
     --muted: #8b92ad;
     --accent: #7c5cff;
     --accent-2: #00d4ff;
+    --accent-rgb: 124, 92, 255;
+    --accent2-rgb: 0, 212, 255;
     --radius: 18px;
     --ease: cubic-bezier(.22, 1, .36, 1);
   }
+
+
+  /* ---------- Themes (chosen in Settings) ---------- */
+  :root[data-theme="ocean"]   { --accent: #2f80ff; --accent-2: #00e0c6; --accent-rgb: 47, 128, 255;  --accent2-rgb: 0, 224, 198; }
+  :root[data-theme="sunset"]  { --accent: #ff6a3d; --accent-2: #ffc23d; --accent-rgb: 255, 106, 61;  --accent2-rgb: 255, 194, 61; }
+  :root[data-theme="emerald"] { --accent: #22c55e; --accent-2: #a3e635; --accent-rgb: 34, 197, 94;   --accent2-rgb: 163, 230, 53; }
+  :root[data-theme="rose"]    { --accent: #ff4d8d; --accent-2: #b266ff; --accent-rgb: 255, 77, 141;  --accent2-rgb: 178, 102, 255; }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -112,9 +121,89 @@
     color: #fff;
     border-radius: 999px;
     background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    box-shadow: 0 8px 22px -8px rgba(124, 92, 255, .9);
+    box-shadow: 0 8px 22px -8px rgba(var(--accent-rgb), .9);
   }
-  .bp-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px -8px rgba(0, 212, 255, .75); }
+  .bp-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px -8px rgba(var(--accent2-rgb), .75); }
+
+
+  /* ---------- Settings panel ---------- */
+  .nav-left { display: flex; align-items: center; gap: 14px; }
+  .icon-btn {
+    width: 40px; height: 40px; padding: 0;
+    display: grid; place-items: center;
+    font-size: 1.15rem; line-height: 1;
+    color: var(--text);
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .1);
+    border-radius: 50%;
+  }
+  .icon-btn:hover { background: rgba(255, 255, 255, .18); transform: scale(1.08); }
+  #setBtn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .6s var(--ease); }
+  #setBtn:hover svg { transform: rotate(90deg); }
+
+  .settings-overlay {
+    position: fixed; inset: 0; z-index: 70;
+    background: rgba(4, 5, 10, .55);
+    backdrop-filter: blur(6px);
+    opacity: 0; visibility: hidden;
+    transition: opacity .4s var(--ease), visibility 0s .4s;
+  }
+  .settings-overlay.open { opacity: 1; visibility: visible; transition: opacity .4s var(--ease); }
+  .settings {
+    position: absolute; top: 0; bottom: 0; left: 0;
+    width: min(400px, 92vw);
+    padding: 26px 26px 30px;
+    overflow-y: auto;
+    background: rgba(16, 19, 33, .94);
+    border-right: 1px solid rgba(255, 255, 255, .1);
+    box-shadow: 30px 0 80px -30px rgba(0, 0, 0, .8);
+    transform: translateX(-105%);
+    transition: transform .55s var(--ease);
+  }
+  .settings-overlay.open .settings { transform: translateX(0); }
+  .set-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+  .set-head h2 { font-size: 1.5rem; font-weight: 800; }
+  .set-sec { margin-bottom: 30px; }
+  .set-sec h3 { font-size: .75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .set-note { margin-top: 12px; font-size: .82rem; color: var(--muted); line-height: 1.5; }
+
+  .swatches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .swatch {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    padding: 14px 8px 12px;
+    font-size: .82rem; font-weight: 600;
+    color: var(--muted);
+    background: rgba(255, 255, 255, .05);
+    border: 2px solid transparent;
+    border-radius: 16px;
+  }
+  .swatch i { width: 34px; height: 34px; border-radius: 50%; display: block; box-shadow: 0 6px 16px -6px rgba(0, 0, 0, .7); transition: transform .4s var(--ease); }
+  .swatch:hover { background: rgba(255, 255, 255, .1); color: var(--text); }
+  .swatch:hover i { transform: scale(1.12); }
+  .swatch.on { color: #fff; border-color: rgba(255, 255, 255, .85); background: rgba(255, 255, 255, .1); }
+
+  .vol-wrap { padding: 0 6px; }
+  #vol {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 8px; border-radius: 8px; outline: none; cursor: pointer;
+    --pct: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2)) 0 / var(--pct) 100% no-repeat, rgba(255, 255, 255, .12);
+  }
+  #vol::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 26px; height: 26px; border-radius: 50%;
+    background: #fff; border: 0; box-shadow: 0 4px 14px rgba(0, 0, 0, .6);
+    transition: transform .25s var(--ease);
+  }
+  #vol::-moz-range-thumb { width: 26px; height: 26px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 4px 14px rgba(0, 0, 0, .6); }
+  #vol:hover::-webkit-slider-thumb { transform: scale(1.15); }
+  .vol-labels { display: flex; justify-content: space-between; margin: 12px -6px 0; }
+  .vol-labels button {
+    padding: 6px 10px; border-radius: 8px;
+    font-size: .85rem; font-weight: 600;
+    background: transparent; color: var(--muted);
+  }
+  .vol-labels button:hover { color: var(--text); }
+  .vol-labels button.on { color: #fff; }
 
   /* ---------- Hero ---------- */
   .hero {
@@ -169,7 +258,7 @@
   .toggle button.on {
     color: #fff;
     background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    box-shadow: 0 6px 18px -6px rgba(124, 92, 255, .8);
+    box-shadow: 0 6px 18px -6px rgba(var(--accent-rgb), .8);
   }
 
   /* ---------- Game container (three layouts) ---------- */
@@ -208,9 +297,9 @@
   .card.visible { opacity: 1; transform: translateY(0); }
   .card:hover {
     transform: translateY(-6px) scale(1.02);
-    border-color: rgba(124, 92, 255, .65);
+    border-color: rgba(var(--accent-rgb), .65);
     background: rgba(24, 29, 48, .78);
-    box-shadow: 0 20px 50px -15px rgba(124, 92, 255, .55);
+    box-shadow: 0 20px 50px -15px rgba(var(--accent-rgb), .55);
   }
 
   .card-art {
@@ -300,9 +389,9 @@
     flex: 1;
     color: #fff;
     background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    box-shadow: 0 10px 30px -10px rgba(124, 92, 255, .8);
+    box-shadow: 0 10px 30px -10px rgba(var(--accent-rgb), .8);
   }
-  .play:hover { transform: translateY(-2px); box-shadow: 0 14px 36px -8px rgba(0, 212, 255, .7); }
+  .play:hover { transform: translateY(-2px); box-shadow: 0 14px 36px -8px rgba(var(--accent2-rgb), .7); }
   .ghost { background: rgba(255, 255, 255, .07); color: var(--text); }
   .ghost:hover { background: rgba(255, 255, 255, .13); }
 
@@ -565,7 +654,7 @@
   .bp-boot.run { opacity: 1; visibility: visible; transition: none; }
   .boot-glow {
     position: absolute; width: 60vmin; height: 60vmin; border-radius: 50%;
-    background: radial-gradient(circle, rgba(124, 92, 255, .55), rgba(0, 212, 255, .2) 45%, transparent 70%);
+    background: radial-gradient(circle, rgba(var(--accent-rgb), .55), rgba(var(--accent2-rgb), .2) 45%, transparent 70%);
     filter: blur(30px);
     opacity: 0; transform: scale(.3);
   }
@@ -635,6 +724,7 @@
     .bp-boot.run .boot-mark span, .bp-boot.run .boot-sub, .bp-boot.run .boot-bar, .bp-boot.run .boot-skip { opacity: 1; filter: none; transform: none; }
   }
 </style>
+<script>try { var t = localStorage.getItem("rog-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
 <body>
 
@@ -643,7 +733,12 @@
 <div class="glow"><span></span><span></span></div>
 
 <nav>
-  <div class="logo"><b>ROG</b></div>
+  <div class="nav-left">
+    <button class="icon-btn" id="setBtn" title="Settings" aria-label="Settings">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+    <div class="logo"><b>ROG</b></div>
+  </div>
   <div class="nav-right">
     <button class="bp-btn" id="bpBtn" title="Fullscreen console-style mode">🎮 Big Picture</button>
     <a href="#games">Games</a>
@@ -665,6 +760,33 @@
   </div>
 </div>
 <main class="grid mode-list" id="grid"></main>
+
+
+<!-- Settings panel -->
+<div class="settings-overlay" id="setOverlay">
+  <aside class="settings" role="dialog" aria-label="Settings">
+    <div class="set-head">
+      <h2>Settings</h2>
+      <button class="icon-btn" id="setClose" aria-label="Close settings">✕</button>
+    </div>
+
+    <section class="set-sec">
+      <h3>Theme</h3>
+      <div class="swatches" id="swatches"></div>
+    </section>
+
+    <section class="set-sec">
+      <h3>Sound volume</h3>
+      <div class="vol-wrap">
+        <input type="range" id="vol" min="0" max="2" step="1" value="2" aria-label="Sound volume">
+        <div class="vol-labels" id="volLabels">
+          <button>Low</button><button>Medium</button><button>High</button>
+        </div>
+      </div>
+      <p class="set-note">Use the 🔊 button in the top bar to turn sound off completely.</p>
+    </section>
+  </aside>
+</div>
 
 <!-- Game details popup -->
 <div class="overlay" id="overlay">
@@ -808,7 +930,10 @@
     };
     let ctx = null, muted = false;
     const live = new Set();
+    const LEVELS = [0.3, 0.6, 1];        /* Low / Medium / High */
+    let level = 2;
     try { muted = localStorage.getItem("rog-muted") === "1"; } catch (e) {}
+    try { const v = parseInt(localStorage.getItem("rog-vol"), 10); if (v >= 0 && v <= 2) level = v; } catch (e) {}
 
     const bank = {};
     Object.keys(FILES).forEach((k) => {
@@ -836,7 +961,7 @@
       osc.frequency.setValueAtTime(freq, t);
       if (to) osc.frequency.exponentialRampToValueAtTime(to, t + dur);
       gain.gain.setValueAtTime(0.0001, t);
-      gain.gain.exponentialRampToValueAtTime(vol, t + 0.012);
+      gain.gain.exponentialRampToValueAtTime(vol * LEVELS[level], t + 0.012);
       gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
       osc.connect(gain).connect(ctx.destination);
       osc.start(t);
@@ -868,7 +993,7 @@
       const a = bank[name];
       if (a && !a.broken) {
         const c = a.cloneNode();         /* clone so quick repeats can overlap */
-        c.volume = vol;
+        c.volume = Math.min(1, vol * LEVELS[level]);
         live.add(c);
         c.addEventListener("ended", () => live.delete(c));
         c.play().catch(() => live.delete(c));
@@ -889,6 +1014,11 @@
         muted = m;
         try { localStorage.setItem("rog-muted", m ? "1" : "0"); } catch (e) {}
         if (m) { live.forEach((c) => c.pause()); live.clear(); }
+      },
+      getLevel: () => level,
+      setLevel(l) {
+        level = Math.max(0, Math.min(2, l));
+        try { localStorage.setItem("rog-vol", String(level)); } catch (e) {}
       },
       stopAll() { live.forEach((c) => c.pause()); live.clear(); },
       tap:    () => play("tap", 0.7),             /* Big Picture hover sound */
@@ -1247,6 +1377,11 @@
     const k = e.key.toLowerCase();
     if (e.ctrlKey || e.metaKey || e.altKey) return;
 
+    if (setOverlay.classList.contains("open")) {      /* settings panel */
+      if (k === "escape") { closeSettings(); e.preventDefault(); }
+      return;
+    }
+
     if (player.classList.contains("open")) {          /* playing a game */
       if (k === "escape" && (!document.fullscreenElement || bpState !== "closed")) {
         if (bpState === "closed") Sound.back(); else Sound.stopAll();
@@ -1295,6 +1430,55 @@
     refreshMute();
     Sound.click();                       /* plays only when sound was just turned on */
   }));
+
+
+  /* ---------- Settings: theme + volume ---------- */
+  const THEMES = [
+    { id: "violet",  name: "Violet",  a: "#7c5cff", b: "#00d4ff" },
+    { id: "ocean",   name: "Ocean",   a: "#2f80ff", b: "#00e0c6" },
+    { id: "sunset",  name: "Sunset",  a: "#ff6a3d", b: "#ffc23d" },
+    { id: "emerald", name: "Emerald", a: "#22c55e", b: "#a3e635" },
+    { id: "rose",    name: "Rose",    a: "#ff4d8d", b: "#b266ff" },
+  ];
+  const setOverlay = $("setOverlay");
+
+  function applyTheme(id) {
+    if (!THEMES.some((t) => t.id === id)) id = "violet";
+    document.documentElement.dataset.theme = id;
+    try { localStorage.setItem("rog-theme", id); } catch (e) {}
+    document.querySelectorAll(".swatch").forEach((b) => b.classList.toggle("on", b.dataset.theme === id));
+  }
+  THEMES.forEach((t) => {
+    const b = document.createElement("button");
+    b.className = "swatch";
+    b.dataset.theme = t.id;
+    b.innerHTML = `<i style="background:linear-gradient(135deg,${t.a},${t.b})"></i><span>${t.name}</span>`;
+    b.addEventListener("click", () => { applyTheme(t.id); Sound.click(); });
+    b.addEventListener("mouseenter", () => Sound.hover());
+    $("swatches").appendChild(b);
+  });
+  let savedTheme = "violet";
+  try { savedTheme = localStorage.getItem("rog-theme") || "violet"; } catch (e) {}
+  applyTheme(savedTheme);
+
+  const volEl = $("vol"), volBtns = document.querySelectorAll("#volLabels button");
+  function showVol() {
+    const l = Sound.getLevel();
+    volEl.value = l;
+    volEl.style.setProperty("--pct", (l * 50) + "%");
+    volBtns.forEach((b, i) => b.classList.toggle("on", i === l));
+  }
+  function changeVol(l) { Sound.setLevel(l); showVol(); Sound.tap(); }   /* plays a sample at the new level */
+  volEl.addEventListener("input", () => changeVol(+volEl.value));
+  volBtns.forEach((b, i) => b.addEventListener("click", () => changeVol(i)));
+  showVol();
+
+  function openSettings()  { setOverlay.classList.add("open"); Sound.open(); }
+  function closeSettings() { if (!setOverlay.classList.contains("open")) return; setOverlay.classList.remove("open"); Sound.back(); }
+  $("setBtn").addEventListener("click", openSettings);
+  $("setBtn").addEventListener("mouseenter", () => Sound.hover());
+  $("setClose").addEventListener("click", closeSettings);
+  setOverlay.addEventListener("click", (e) => { if (e.target === setOverlay) closeSettings(); });
 
   $("year").textContent = new Date().getFullYear();
 </script>
