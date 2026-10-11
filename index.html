@@ -890,6 +890,8 @@
         try { localStorage.setItem("rog-muted", m ? "1" : "0"); } catch (e) {}
         if (m) { live.forEach((c) => c.pause()); live.clear(); }
       },
+      stopAll() { live.forEach((c) => c.pause()); live.clear(); },
+      tap:    () => play("tap", 0.7),             /* Big Picture hover sound */
       hover:  () => play("tap", 0.25, "hover"),
       click:  () => play("tap", 0.7),
       nav:    () => play("nav", 0.7),
@@ -1018,7 +1020,7 @@
     setTimeout(() => (stage.innerHTML = ""), 600); /* stop the game after the slide-out */
     window.focus();                      /* give keyboard control back to the menu */
   }
-  $("exitBtn").addEventListener("click", () => { Sound.back(); exitPlayer(); });
+  $("exitBtn").addEventListener("click", () => { if (bpState === "closed") Sound.back(); else Sound.stopAll(); exitPlayer(); });
   $("fsBtn").addEventListener("click", () => {
     Sound.click();
     const el = stage.querySelector("iframe") || stage;
@@ -1117,20 +1119,20 @@
     if (bpState !== "details") return;
     setBpState("browse");
     bpDetails.classList.remove("open");
-    Sound.back();
+    Sound.stopAll();                     /* Back/Cancel is silent so it never clashes with other audio */
   }
   function playFromBp() {
-    Sound.launch();
+    Sound.stopAll();                     /* Play is silent so the game's own audio isn't disturbed */
     launchGame(games[bpIndex]);
   }
   $("bpPlay").addEventListener("click", playFromBp);
   $("bpBack").addEventListener("click", closeDetails);
-  $("bpPlay").addEventListener("mouseenter", () => { if (detailFocus !== 0) Sound.nav(); setFocus(0); });
-  $("bpBack").addEventListener("mouseenter", () => { if (detailFocus !== 1) Sound.nav(); setFocus(1); });
+  $("bpPlay").addEventListener("mouseenter", () => { if (detailFocus !== 0) Sound.tap(); setFocus(0); });
+  $("bpBack").addEventListener("mouseenter", () => { if (detailFocus !== 1) Sound.tap(); setFocus(1); });
   $("bpPrev").addEventListener("click", () => bpMove(-1));
   $("bpNext").addEventListener("click", () => bpMove(1));
   [$("bpPrev"), $("bpNext"), $("bpExit"), $("bpMute")].forEach((b) =>
-    b.addEventListener("mouseenter", () => Sound.hover()));
+    b.addEventListener("mouseenter", () => Sound.tap()));
 
   /* Enter / exit */
   function goFullscreen() {
@@ -1247,7 +1249,8 @@
 
     if (player.classList.contains("open")) {          /* playing a game */
       if (k === "escape" && (!document.fullscreenElement || bpState !== "closed")) {
-        Sound.back(); exitPlayer();
+        if (bpState === "closed") Sound.back(); else Sound.stopAll();
+        exitPlayer();
       }
       return;
     }
