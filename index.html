@@ -1052,7 +1052,7 @@
     card.addEventListener("click", () => {
       if (bpState !== "browse") return;
       if (i === bpIndex) openDetails();
-      else { Sound.nav(); selectGame(i); }
+      else { Sound.tap(); selectGame(i); }
     });
     bpTrack.appendChild(card);
     return card;
@@ -1090,7 +1090,7 @@
   function bpMove(d) {
     const ni = Math.max(0, Math.min(games.length - 1, bpIndex + d));
     if (ni === bpIndex) return;
-    Sound.nav();
+    Sound.tap();
     selectGame(ni);
   }
 
@@ -1227,15 +1227,15 @@
     if (bpState === "browse") {
       if (left) bpMove(-1);
       else if (right) bpMove(1);
-      else if (k === "home" && bpIndex !== 0) { Sound.nav(); selectGame(0); }
-      else if (k === "end" && bpIndex !== games.length - 1) { Sound.nav(); selectGame(games.length - 1); }
+      else if (k === "home" && bpIndex !== 0) { Sound.tap(); selectGame(0); }
+      else if (k === "end" && bpIndex !== games.length - 1) { Sound.tap(); selectGame(games.length - 1); }
       else if (ok) openDetails();
       else if (back) exitBP(true);
       else return;
       e.preventDefault();
     } else if (bpState === "details") {
-      if (left || k === "w" || k === "arrowup") { if (detailFocus !== 0) { Sound.nav(); setFocus(0); } }
-      else if (right || k === "s" || k === "arrowdown") { if (detailFocus !== 1) { Sound.nav(); setFocus(1); } }
+      if (left || k === "w" || k === "arrowup") { if (detailFocus !== 0) { Sound.tap(); setFocus(0); } }
+      else if (right || k === "s" || k === "arrowdown") { if (detailFocus !== 1) { Sound.tap(); setFocus(1); } }
       else if (ok) { detailFocus === 0 ? playFromBp() : closeDetails(); }
       else if (back) closeDetails();
       else return;
