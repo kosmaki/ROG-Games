@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Chakra+Petch:wght@500;600;700&display=swap" rel="stylesheet">
 <title>ROG</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0d14'/%3E%3Ctext x='32' y='44' font-family='Arial Black,Arial' font-weight='900' font-size='34' text-anchor='middle' fill='%237c5cff'%3ER%3C/text%3E%3C/svg%3E">
 <style>
   :root {
     --bg: #0b0d14;
@@ -723,14 +727,229 @@
     .card { opacity: 1; transform: none; }
     .bp-boot.run .boot-mark span, .bp-boot.run .boot-sub, .bp-boot.run .boot-bar, .bp-boot.run .boot-skip { opacity: 1; filter: none; transform: none; }
   }
+
+  /* ======================================================================
+     GAMER LAYER (main page look)
+     ====================================================================== */
+  @property --ang { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+  [hidden] { display: none !important; }
+  body { font-family: "Barlow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 17px; }
+  h1, h2, h3, .logo, button, kbd, .glitch { font-family: "Chakra Petch", "Barlow", system-ui, sans-serif; }
+  :focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; }
+
+  /* Background effects */
+  #fx { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+  .floor {
+    position: fixed; left: -60%; right: -60%; bottom: 0; height: 60vh;
+    z-index: -1; pointer-events: none;
+    background:
+      linear-gradient(rgba(var(--accent-rgb), .4) 1px, transparent 1px) 0 0 / 100% 56px,
+      linear-gradient(90deg, rgba(var(--accent-rgb), .4) 1px, transparent 1px) 0 0 / 56px 100%;
+    transform: perspective(520px) rotateX(64deg);
+    transform-origin: 50% 100%;
+    -webkit-mask-image: linear-gradient(to top, #000 5%, transparent 80%);
+            mask-image: linear-gradient(to top, #000 5%, transparent 80%);
+    animation: floorMove 2.4s linear infinite;
+  }
+  @keyframes floorMove { to { background-position: 0 56px, 0 0; } }
+  .scan {
+    position: fixed; inset: 0; z-index: 2; pointer-events: none;
+    background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, .03) 0 1px, transparent 1px 3px);
+    mix-blend-mode: overlay;
+  }
+  body.fx-off #fx, body.fx-off .floor, body.fx-off .scan,
+  body.bp-open #fx, body.bp-open .floor, body.bp-open .scan { display: none; }
+
+  /* Nav */
+  nav::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent);
+    opacity: .75;
+  }
+  .logo { font-weight: 700; letter-spacing: .14em; }
+  .bp-btn {
+    border-radius: 0; font-weight: 700; letter-spacing: .05em;
+    clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+    box-shadow: none;
+  }
+  .bp-btn:hover { box-shadow: none; filter: brightness(1.15); }
+
+  /* Glitch wordmark */
+  .glitch { position: relative; display: inline-block; color: #fff; font-weight: 700; line-height: .88; letter-spacing: .02em; }
+  .glitch::before, .glitch::after {
+    content: attr(data-text); position: absolute; inset: 0; pointer-events: none;
+    clip-path: inset(0 0 100% 0);
+  }
+  .glitch::before { color: var(--accent-2); mix-blend-mode: screen; animation: glitchA 3.8s infinite steps(1); }
+  .glitch::after  { color: var(--accent);   mix-blend-mode: screen; animation: glitchB 3.8s infinite steps(1); }
+  @keyframes glitchA {
+    0%, 85%, 100% { clip-path: inset(0 0 100% 0); transform: none; }
+    86% { clip-path: inset(8% 0 62% 0);  transform: translate(-7px, 0); }
+    89% { clip-path: inset(48% 0 28% 0); transform: translate(6px, 0); }
+    92% { clip-path: inset(74% 0 4% 0);  transform: translate(-4px, 0); }
+  }
+  @keyframes glitchB {
+    0%, 86%, 100% { clip-path: inset(0 0 100% 0); transform: none; }
+    87% { clip-path: inset(30% 0 40% 0); transform: translate(7px, 0); }
+    90% { clip-path: inset(0 0 78% 0);   transform: translate(-6px, 0); }
+    93% { clip-path: inset(58% 0 18% 0); transform: translate(4px, 0); }
+  }
+
+  /* Hero */
+  .hero.hero-split {
+    display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(290px, .75fr);
+    gap: clamp(28px, 5vw, 80px); align-items: center;
+    max-width: 1300px; margin: 0 auto; text-align: left;
+    padding: clamp(48px, 9vh, 110px) 6vw 30px;
+  }
+  .hero h1.glitch {
+    font-size: clamp(5.5rem, 17vw, 12rem); animation: none;
+    text-shadow: 0 0 48px rgba(var(--accent-rgb), .55);
+  }
+  .hero-type { margin-top: 24px; min-height: 1.7em; font-family: "Chakra Petch", sans-serif; font-weight: 500; font-size: clamp(1.1rem, 2.3vw, 1.55rem); color: #d6daea; }
+  .caret { display: inline-block; width: .55ch; height: 1.05em; margin-left: 4px; vertical-align: -.15em; background: var(--accent-2); animation: caret 1s steps(1) infinite; }
+  @keyframes caret { 50% { opacity: 0; } }
+  .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 30px; }
+  .cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 15px 30px; border: 0; border-radius: 0; cursor: pointer;
+    font-size: 1.02rem; font-weight: 700; letter-spacing: .05em; text-decoration: none; color: #fff;
+    background: linear-gradient(100deg, var(--accent), var(--accent-2));
+    clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+    transition: transform .25s var(--ease), filter .25s;
+  }
+  .cta:hover { transform: translateY(-3px); filter: brightness(1.15) saturate(1.1); }
+  .cta.ghost { background: rgba(255, 255, 255, .09); color: var(--text); }
+  .cta.ghost:hover { background: rgba(255, 255, 255, .17); }
+  .hero-keys { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 26px; color: var(--muted); font-size: .92rem; }
+  .hero-keys span { display: inline-flex; align-items: center; gap: 6px; }
+
+  /* Live readout panel */
+  .readout {
+    padding: 20px 24px 22px;
+    background: rgba(10, 12, 22, .72);
+    border: 1px solid rgba(var(--accent-rgb), .4);
+    backdrop-filter: blur(10px);
+    clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
+    box-shadow: inset 0 0 50px rgba(var(--accent-rgb), .1);
+  }
+  .ro-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-weight: 600; font-size: 1.05rem; color: #fff; }
+  .blink { width: 9px; height: 9px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 12px #4ade80; animation: blink 1.6s ease-in-out infinite; }
+  @keyframes blink { 50% { opacity: .35; } }
+  .readout dl > div { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; border-bottom: 1px dashed rgba(255, 255, 255, .12); font-size: .98rem; }
+  .readout dt { color: var(--muted); }
+  .readout dd { font-weight: 600; color: #fff; font-variant-numeric: tabular-nums; text-align: right; }
+  .readout dl > div.bar { padding: 0; border: 0; height: 5px; margin: 2px 0 8px; background: rgba(255, 255, 255, .1); }
+  .readout .bar i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .4s; }
+
+  /* Games section header, search, genres */
+  .section-head { padding-top: 56px; }
+  .section-title { font-size: 1.7rem; font-weight: 700; }
+  .section-title::before {
+    content: ""; display: inline-block; width: 6px; height: 1.05em; margin-right: 12px; vertical-align: -.14em;
+    background: linear-gradient(var(--accent), var(--accent-2)); box-shadow: 0 0 14px var(--accent);
+  }
+  .tools { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .search {
+    display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 14px; width: min(280px, 100%);
+    background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); border-radius: 10px;
+    transition: border-color .3s, box-shadow .3s;
+  }
+  .search:focus-within { border-color: var(--accent-2); box-shadow: 0 0 0 3px rgba(var(--accent2-rgb), .2); }
+  .search svg { width: 18px; height: 18px; flex-shrink: 0; fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; }
+  .search input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; color: var(--text); font: inherit; font-family: "Barlow", sans-serif; }
+  .search input::placeholder { color: var(--muted); }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; width: 100%; max-width: 1300px; margin: 0 auto; padding: 8px 6vw 0; }
+  .chip { padding: 7px 15px; font-size: .88rem; font-weight: 600; color: var(--muted); background: rgba(255, 255, 255, .06); border-radius: 8px; }
+  .chip:hover { color: var(--text); background: rgba(255, 255, 255, .12); }
+  .chip.on { color: #fff; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+  .nores { text-align: center; color: var(--muted); padding: 10px 6vw 90px; line-height: 1.6; }
+  .nores b { color: var(--text); }
+
+  /* Cards */
+  .card {
+    border-radius: 12px; border-color: rgba(255, 255, 255, .07);
+    background:
+      radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(var(--accent-rgb), .17), transparent 45%),
+      rgba(14, 17, 30, .74);
+  }
+  .card::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none;
+    background: conic-gradient(from var(--ang), transparent 0 55%, var(--accent) 78%, var(--accent-2) 94%, transparent 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    opacity: 0; transition: opacity .35s;
+  }
+  .card:hover::before { opacity: 1; animation: spin 2.4s linear infinite; }
+  @keyframes spin { to { --ang: 360deg; } }
+  .card:hover {
+    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-6px) scale(1.02);
+    border-color: transparent;
+    box-shadow: 0 24px 60px -18px rgba(var(--accent-rgb), .6);
+    transition: opacity .7s var(--ease), transform .12s ease-out, box-shadow .4s var(--ease), border-color .4s, background .4s;
+  }
+  .card-art { border-radius: 9px; }
+  .card-text h3 { font-size: 1.22rem; font-weight: 600; }
+  .card-text p { display: flex; align-items: center; }
+  .dot { display: inline-block; width: 7px; height: 7px; margin-right: 8px; border-radius: 50%; background: #f5b94a; }
+  .dot.on { background: #4ade80; box-shadow: 0 0 9px #4ade80; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .tags span { padding: 2px 9px; font-size: .74rem; font-weight: 500; color: #b4bad2; border: 1px solid rgba(255, 255, 255, .16); border-radius: 5px; }
+  .mode-capsule .tags { display: none; }
+
+  /* Settings: effects switch */
+  .switch-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; color: #d6daea; cursor: pointer; }
+  .switch-row input {
+    -webkit-appearance: none; appearance: none; position: relative; flex-shrink: 0;
+    width: 48px; height: 27px; border-radius: 27px; cursor: pointer;
+    background: rgba(255, 255, 255, .15); transition: background .3s;
+  }
+  .switch-row input::after {
+    content: ""; position: absolute; top: 3px; left: 3px; width: 21px; height: 21px; border-radius: 50%;
+    background: #fff; transition: transform .3s var(--ease);
+  }
+  .switch-row input:checked { background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+  .switch-row input:checked::after { transform: translateX(21px); }
+
+  /* Intro splash */
+  .splash {
+    position: fixed; inset: 0; z-index: 200;
+    display: grid; place-content: center; justify-items: center; gap: 26px;
+    background: #05060c; cursor: pointer;
+    transition: opacity .6s ease, visibility 0s .6s;
+  }
+  .splash.gone { opacity: 0; visibility: hidden; pointer-events: none; }
+  .splash .glitch { font-size: clamp(4.5rem, 15vw, 9rem); text-shadow: 0 0 50px rgba(var(--accent-rgb), .6); }
+  .splash-bar { width: min(260px, 60vw); height: 3px; background: rgba(255, 255, 255, .12); overflow: hidden; }
+  .splash-bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transform: scaleX(0); transform-origin: left; animation: fill 1.2s cubic-bezier(.4, 0, .2, 1) forwards; }
+  .splash-txt { color: var(--muted); font-size: .95rem; }
+
+  @media (max-width: 600px) {
+    .nav-right .bp-btn { display: none; }     /* the hero has its own Big Picture button */
+  }
+  @media (max-width: 860px) {
+    .hero.hero-split { grid-template-columns: 1fr; }
+    .readout { max-width: 440px; }
+    .hero-keys { display: none; }
+  }
 </style>
 <script>try { var t = localStorage.getItem("rog-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
 <body>
 
+<!-- Intro splash (once per visit) -->
+<div class="splash" id="splash">
+  <div class="glitch" data-text="ROG">ROG</div>
+  <div class="splash-bar"><i></i></div>
+  <div class="splash-txt">Loading your games</div>
+</div>
+
 <!-- One blurred background layer per game is added here by the script -->
 <div class="page-bg" id="pageBg"></div>
 <div class="glow"><span></span><span></span></div>
+<canvas id="fx"></canvas>
+<div class="floor"></div>
+<div class="scan"></div>
 
 <nav>
   <div class="nav-left">
@@ -746,20 +965,52 @@
   </div>
 </nav>
 
-<header class="hero">
-  <h1>Pick a game.<br><span>Hit play.</span></h1>
-  <p>A small collection of games, right in your browser. No downloads needed.</p>
+<header class="hero hero-split">
+  <div class="hero-copy">
+    <h1 class="glitch" data-text="ROG">ROG</h1>
+    <div class="hero-type"><span id="typed"></span><i class="caret"></i></div>
+    <div class="hero-cta">
+      <button class="cta" id="heroBp">▶ Big Picture</button>
+      <a class="cta ghost" href="#games">Browse games</a>
+    </div>
+    <div class="hero-keys">
+      <span><kbd>B</kbd> Big Picture</span>
+      <span><kbd>/</kbd> Search</span>
+      <span><kbd>A</kbd><kbd>D</kbd> Move in Big Picture</span>
+    </div>
+  </div>
+  <aside class="readout" aria-label="Live system readout">
+    <div class="ro-head"><i class="blink"></i>System</div>
+    <dl>
+      <div><dt>Games loaded</dt><dd id="roGames">0</dd></div>
+      <div><dt>Playable now</dt><dd id="roPlay">0</dd></div>
+      <div><dt>Frame rate</dt><dd><span id="roFps">60</span> fps</dd></div>
+      <div class="bar"><i id="roBar"></i></div>
+      <div><dt>Controller</dt><dd id="roPad">Not found</dd></div>
+      <div><dt>Theme</dt><dd id="roTheme">Violet</dd></div>
+      <div><dt>Volume</dt><dd id="roVol">High</dd></div>
+    </dl>
+  </aside>
 </header>
 
 <div class="section-head" id="games">
   <h2 class="section-title">All games</h2>
-  <div class="toggle" id="toggle">
-    <button data-mode="list">☰ List</button>
-    <button data-mode="grid">▦ Grid</button>
-    <button data-mode="capsule">⬭ Capsule</button>
+  <div class="tools">
+    <label class="search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+      <input type="text" id="search" placeholder="Search games" autocomplete="off" spellcheck="false" aria-label="Search games">
+      <kbd>/</kbd>
+    </label>
+    <div class="toggle" id="toggle">
+      <button data-mode="list">☰ List</button>
+      <button data-mode="grid">▦ Grid</button>
+      <button data-mode="capsule">⬭ Capsule</button>
+    </div>
   </div>
 </div>
+<div class="chips" id="chips" aria-label="Filter by genre"></div>
 <main class="grid mode-list" id="grid"></main>
+<div class="nores" id="noResults" hidden>Nothing matches <b id="noResultsQ"></b>.<br>Clear the search or pick another genre.</div>
 
 
 <!-- Settings panel -->
@@ -784,6 +1035,12 @@
         </div>
       </div>
       <p class="set-note">Use the 🔊 button in the top bar to turn sound off completely.</p>
+    </section>
+
+    <section class="set-sec">
+      <h3>Effects</h3>
+      <label class="switch-row"><span>Particles, neon grid and scanlines</span><input type="checkbox" id="fxToggle" checked></label>
+      <p class="set-note">Turn this off if the page feels slow on your device.</p>
     </section>
   </aside>
 </div>
@@ -894,16 +1151,18 @@
               It becomes the blurred page background while you hover
               the game (and the cover art in Big Picture mode).
               Leave it empty ("") to use the colors instead.
+     - tags: genres shown as filter buttons, e.g. ["Arcade", "Puzzle"]
      - url: path to the game's index.html, e.g. "games/my-game/index.html"
+            or a full address if it lives in another repo.
             Leave it empty ("") to keep it as a placeholder.
      ============================================================ */
   const games = [
-    { title: "Game One",   desc: "Placeholder description for the first game.",  emoji: "🚀", colors: ["#7c5cff", "#3a2a9e"], image: "", url: "" },
-    { title: "Game Two",   desc: "Placeholder description for the second game.", emoji: "🏎️", colors: ["#00d4ff", "#0a5f8a"], image: "", url: "" },
-    { title: "Game Three", desc: "Placeholder description for the third game.",  emoji: "🧩", colors: ["#ff5c8a", "#9e2a55"], image: "", url: "" },
-    { title: "Game Four",  desc: "Placeholder description for the fourth game.", emoji: "⚔️", colors: ["#ffb347", "#a15a0a"], image: "", url: "" },
-    { title: "Game Five",  desc: "Placeholder description for the fifth game.",  emoji: "🌌", colors: ["#4ade80", "#14693a"], image: "", url: "" },
-    { title: "Game Six",   desc: "Placeholder description for the sixth game.",  emoji: "🎯", colors: ["#a78bfa", "#4c2d9e"], image: "", url: "" },
+    { title: "Game One",   desc: "Placeholder description for the first game.",  emoji: "🚀", colors: ["#7c5cff", "#3a2a9e"], image: "", tags: ["Space", "Arcade"], url: "" },
+    { title: "Game Two",   desc: "Placeholder description for the second game.", emoji: "🏎️", colors: ["#00d4ff", "#0a5f8a"], image: "", tags: ["Racing"], url: "" },
+    { title: "Game Three", desc: "Placeholder description for the third game.",  emoji: "🧩", colors: ["#ff5c8a", "#9e2a55"], image: "", tags: ["Puzzle"], url: "" },
+    { title: "Game Four",  desc: "Placeholder description for the fourth game.", emoji: "⚔️", colors: ["#ffb347", "#a15a0a"], image: "", tags: ["Action", "RPG"], url: "" },
+    { title: "Game Five",  desc: "Placeholder description for the fifth game.",  emoji: "🌌", colors: ["#4ade80", "#14693a"], image: "", tags: ["Space", "Adventure"], url: "" },
+    { title: "Game Six",   desc: "Placeholder description for the sixth game.",  emoji: "🎯", colors: ["#a78bfa", "#4c2d9e"], image: "", tags: ["Arcade", "Skill"], url: "" },
   ];
 
   const $ = (id) => document.getElementById(id);
@@ -1061,7 +1320,7 @@
     card.style.transitionDelay = `${i * 70}ms, 0ms, 0ms, 0ms`;
     card.innerHTML = `
       <div class="card-art">${g.image ? "" : g.emoji}</div>
-      <div class="card-text"><h3>${g.title}</h3><p>${g.url ? "Ready to play" : "Coming soon"}</p></div>
+      <div class="card-text"><h3>${g.title}</h3><p><i class="dot ${g.url ? "on" : ""}"></i>${g.url ? "Ready to play" : "Coming soon"}</p><div class="tags">${(g.tags || []).map((t) => `<span>${t}</span>`).join("")}</div></div>
       <span class="go">▶</span>`;
     card.querySelector(".card-art").style.background = bg(g);
 
@@ -1381,6 +1640,11 @@
     const k = e.key.toLowerCase();
     if (e.ctrlKey || e.metaKey || e.altKey) return;
 
+    if (e.target && e.target.id === "search") {          /* typing in the search box */
+      if (k === "escape") { e.target.value = ""; applyFilter(); e.target.blur(); }
+      return;
+    }
+
     if (setOverlay.classList.contains("open")) {      /* settings panel */
       if (k === "escape") { closeSettings(); e.preventDefault(); }
       return;
@@ -1395,6 +1659,10 @@
     }
     if (bpState !== "closed") { bpKey(k, e); return; }
 
+    if (!overlay.classList.contains("open")) {          /* shortcuts on the main page */
+      if (k === "b") { enterBP(); e.preventDefault(); return; }
+      if (k === "/") { $("search").focus(); e.preventDefault(); return; }
+    }
     if (k === "escape" && overlay.classList.contains("open")) { Sound.back(); closeModal(); }
   });
 
@@ -1443,20 +1711,44 @@
     { id: "sunset",  name: "Sunset",  a: "#ff6a3d", b: "#ffc23d" },
     { id: "emerald", name: "Emerald", a: "#22c55e", b: "#a3e635" },
     { id: "rose",    name: "Rose",    a: "#ff4d8d", b: "#b266ff" },
+    { id: "rgb",     name: "RGB",     a: "#ff3b3b", b: "#3b6bff", rainbow: true },
   ];
+
+  /* RGB theme: the accent colours cycle through the rainbow */
+  let rgbTimer = null;
+  function hsl2rgb(h, sat, lig) {
+    sat /= 100; lig /= 100;
+    const k = (n) => (n + h / 30) % 12, a = sat * Math.min(lig, 1 - lig);
+    const f = (n) => lig - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+    return [Math.round(255 * f(0)), Math.round(255 * f(8)), Math.round(255 * f(4))];
+  }
+  function rgbStep() {
+    const h = (Date.now() / 25) % 360, a = hsl2rgb(h, 100, 62), b = hsl2rgb((h + 70) % 360, 100, 58);
+    const st = document.documentElement.style;
+    st.setProperty("--accent", `rgb(${a})`); st.setProperty("--accent-2", `rgb(${b})`);
+    st.setProperty("--accent-rgb", a.join(", ")); st.setProperty("--accent2-rgb", b.join(", "));
+  }
+  function setRgb(on) {
+    clearInterval(rgbTimer); rgbTimer = null;
+    const st = document.documentElement.style;
+    if (on) { rgbStep(); rgbTimer = setInterval(rgbStep, 70); }
+    else ["--accent", "--accent-2", "--accent-rgb", "--accent2-rgb"].forEach((p) => st.removeProperty(p));
+  }
   const setOverlay = $("setOverlay");
 
   function applyTheme(id) {
     if (!THEMES.some((t) => t.id === id)) id = "violet";
     document.documentElement.dataset.theme = id;
+    setRgb(id === "rgb");
     try { localStorage.setItem("rog-theme", id); } catch (e) {}
+    hudRefresh();
     document.querySelectorAll(".swatch").forEach((b) => b.classList.toggle("on", b.dataset.theme === id));
   }
   THEMES.forEach((t) => {
     const b = document.createElement("button");
     b.className = "swatch";
     b.dataset.theme = t.id;
-    b.innerHTML = `<i style="background:linear-gradient(135deg,${t.a},${t.b})"></i><span>${t.name}</span>`;
+    b.innerHTML = `<i style="background:${t.rainbow ? "conic-gradient(#ff3b3b,#ffd23b,#3bff6b,#3bd5ff,#6b3bff,#ff3bd5,#ff3b3b)" : `linear-gradient(135deg,${t.a},${t.b})`}"></i><span>${t.name}</span>`;
     b.addEventListener("click", () => { applyTheme(t.id); Sound.click(); });
     b.addEventListener("mouseenter", () => Sound.hover());
     $("swatches").appendChild(b);
@@ -1472,7 +1764,7 @@
     volEl.style.setProperty("--pct", (l * 50) + "%");
     volBtns.forEach((b, i) => b.classList.toggle("on", i === l));
   }
-  function changeVol(l) { Sound.setLevel(l); showVol(); Sound.tap(); }   /* plays a sample at the new level */
+  function changeVol(l) { Sound.setLevel(l); showVol(); hudRefresh(); Sound.tap(); }   /* plays a sample at the new level */
   volEl.addEventListener("input", () => changeVol(+volEl.value));
   volBtns.forEach((b, i) => b.addEventListener("click", () => changeVol(i)));
   showVol();
@@ -1483,6 +1775,178 @@
   $("setBtn").addEventListener("mouseenter", () => Sound.hover());
   $("setClose").addEventListener("click", closeSettings);
   setOverlay.addEventListener("click", (e) => { if (e.target === setOverlay) closeSettings(); });
+
+
+  /* ============================================================
+     GAMER LAYER: splash, hero, live readout, search, effects
+     ============================================================ */
+  const reduceMotion = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+  /* Live readout (also called when theme or volume changes) */
+  function hudRefresh() {
+    const t = THEMES.find((x) => x.id === document.documentElement.dataset.theme) || THEMES[0];
+    const set = (id, v) => { const e = $(id); if (e) e.textContent = v; };
+    set("roGames", games.length);
+    set("roPlay", games.filter((g) => g.url).length);
+    set("roTheme", t.name);
+    set("roVol", ["Low", "Medium", "High"][Sound.getLevel()]);
+  }
+  hudRefresh();
+
+  /* Intro splash, once per visit */
+  (function () {
+    const sp = $("splash");
+    let seen = false;
+    try { seen = sessionStorage.getItem("rog-splash") === "1"; } catch (e) {}
+    if (seen || reduceMotion) { sp.remove(); return; }
+    const hide = () => {
+      sp.classList.add("gone");
+      try { sessionStorage.setItem("rog-splash", "1"); } catch (e) {}
+      setTimeout(() => sp.remove(), 800);
+    };
+    sp.addEventListener("click", hide);
+    setTimeout(hide, 1500);
+  })();
+
+  /* Typed hero line */
+  (function () {
+    const el = $("typed");
+    const lines = ["Pick a game.", "Hit play.", "Press B for Big Picture.", "Everything runs in your browser."];
+    if (reduceMotion) { el.textContent = lines[0]; return; }
+    let li = 0, ci = 0, del = false;
+    (function tick() {
+      const s = lines[li];
+      ci += del ? -1 : 1;
+      el.textContent = s.slice(0, ci);
+      let wait = del ? 28 : 55;
+      if (!del && ci === s.length) { del = true; wait = 1700; }
+      else if (del && ci === 0) { del = false; li = (li + 1) % lines.length; wait = 350; }
+      setTimeout(tick, wait);
+    })();
+  })();
+
+  $("heroBp").addEventListener("click", enterBP);
+  $("heroBp").addEventListener("mouseenter", () => Sound.hover());
+  $("bpBtn").addEventListener("mouseenter", () => Sound.hover());
+
+  /* Frame rate + controller */
+  (function () {
+    let frames = 0, last = performance.now();
+    (function loop(now) {
+      frames++;
+      if (now - last >= 500) {
+        const f = Math.round(frames * 1000 / (now - last));
+        frames = 0; last = now;
+        $("roFps").textContent = f;
+        $("roBar").style.width = Math.min(100, f / 60 * 100) + "%";
+      }
+      requestAnimationFrame(loop);
+    })(last);
+  })();
+  function padLabel() {
+    const pads = navigator.getGamepads ? [...navigator.getGamepads()] : [];
+    const p = pads.find(Boolean);
+    $("roPad").textContent = p ? (p.id.split("(")[0].trim().slice(0, 24) || "Connected") : "Not found";
+  }
+  addEventListener("gamepadconnected", padLabel);
+  addEventListener("gamepaddisconnected", padLabel);
+  padLabel();
+
+  /* Search + genre filters */
+  const searchEl = $("search"), chipsEl = $("chips"), gameCards = [...grid.children];
+  let activeTag = "All";
+  const allTags = ["All", ...new Set(games.flatMap((g) => g.tags || []))];
+  allTags.forEach((t) => {
+    const b = document.createElement("button");
+    b.className = "chip" + (t === "All" ? " on" : "");
+    b.textContent = t;
+    b.addEventListener("click", () => {
+      activeTag = t;
+      chipsEl.querySelectorAll(".chip").forEach((c) => c.classList.toggle("on", c === b));
+      Sound.click(); applyFilter();
+    });
+    b.addEventListener("mouseenter", () => Sound.hover());
+    chipsEl.appendChild(b);
+  });
+  if (allTags.length < 3) chipsEl.hidden = true;        /* nothing worth filtering by */
+  function applyFilter() {
+    const q = searchEl.value.trim().toLowerCase();
+    let shown = 0;
+    games.forEach((g, i) => {
+      const hay = (g.title + " " + g.desc + " " + (g.tags || []).join(" ")).toLowerCase();
+      const ok = (!q || hay.includes(q)) && (activeTag === "All" || (g.tags || []).includes(activeTag));
+      gameCards[i].style.display = ok ? "" : "none";
+      if (ok) shown++;
+    });
+    $("noResults").hidden = shown > 0;
+    $("noResultsQ").textContent = q ? `"${searchEl.value.trim()}"` : activeTag;
+  }
+  searchEl.addEventListener("input", applyFilter);
+
+  /* Cards: cursor glow + tilt */
+  grid.addEventListener("mousemove", (e) => {
+    const c = e.target.closest(".card");
+    if (!c) return;
+    const r = c.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    c.style.setProperty("--mx", x + "px");
+    c.style.setProperty("--my", y + "px");
+    if (!reduceMotion) {
+      c.style.setProperty("--ry", ((x / r.width - 0.5) * 8).toFixed(2) + "deg");
+      c.style.setProperty("--rx", ((0.5 - y / r.height) * 6).toFixed(2) + "deg");
+    }
+  });
+  grid.addEventListener("mouseout", (e) => {
+    const c = e.target.closest(".card");
+    if (c && !c.contains(e.relatedTarget)) { c.style.setProperty("--rx", "0deg"); c.style.setProperty("--ry", "0deg"); }
+  });
+
+  /* Effects on/off */
+  const fxToggle = $("fxToggle");
+  let fxPref = !reduceMotion;
+  try { const v = localStorage.getItem("rog-fx"); if (v !== null) fxPref = v === "1"; } catch (e) {}
+  function applyFx() { document.body.classList.toggle("fx-off", !fxPref); fxToggle.checked = fxPref; }
+  fxToggle.addEventListener("change", () => {
+    fxPref = fxToggle.checked;
+    try { localStorage.setItem("rog-fx", fxPref ? "1" : "0"); } catch (e) {}
+    Sound.click(); applyFx();
+  });
+  applyFx();
+
+  /* Particles */
+  (function () {
+    const cv = $("fx"), cx = cv.getContext("2d");
+    let W = 0, H = 0, pts = [], rgb = "124,92,255", tick = 0;
+    function size() {
+      W = cv.width = innerWidth; H = cv.height = innerHeight;
+      const n = Math.min(70, Math.floor(W * H / 24000));
+      pts = Array.from({ length: n }, () => ({
+        x: Math.random() * W, y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.28, vy: (Math.random() - 0.5) * 0.28, r: Math.random() * 1.5 + 0.6,
+      }));
+    }
+    size();
+    addEventListener("resize", size);
+    (function loop() {
+      requestAnimationFrame(loop);
+      if (!fxPref || document.hidden || document.body.classList.contains("bp-open")) return;
+      if (++tick % 20 === 0) rgb = getComputedStyle(document.documentElement).getPropertyValue("--accent-rgb").trim() || rgb;
+      cx.clearRect(0, 0, W, H);
+      for (const p of pts) {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > W) p.vx *= -1;
+        if (p.y < 0 || p.y > H) p.vy *= -1;
+        cx.fillStyle = `rgba(${rgb},.75)`;
+        cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, 6.2832); cx.fill();
+      }
+      for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
+        const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y, d = dx * dx + dy * dy;
+        if (d < 12000) {
+          cx.strokeStyle = `rgba(${rgb},${(1 - d / 12000) * 0.28})`;
+          cx.beginPath(); cx.moveTo(pts[i].x, pts[i].y); cx.lineTo(pts[j].x, pts[j].y); cx.stroke();
+        }
+      }
+    })();
+  })();
 
   $("year").textContent = new Date().getFullYear();
 </script>
