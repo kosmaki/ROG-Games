@@ -426,11 +426,13 @@
     display: flex; flex-direction: column;
     border: 1px solid rgba(255,255,255,.16);
     border-radius: 20px; overflow: hidden;
+    /* Keep the closed player out of rendering so it can never dim the page. */
+    visibility: hidden; pointer-events: none;
     box-shadow: 0 24px 100px rgba(0,0,0,.45);
     transform: translateY(110%) scale(.98);
-    transition: transform .6s var(--ease);
+    transition: transform .6s var(--ease), visibility 0s .6s;
   }
-  .player.open { transform: translateY(0) scale(1); }
+  .player.open { visibility: visible; pointer-events: auto; transform: translateY(0) scale(1); transition: transform .6s var(--ease), visibility 0s; }
   .player-bar {
     display: flex; align-items: center; justify-content: space-between;
     padding: 12px 20px;
