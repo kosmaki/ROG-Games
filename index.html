@@ -169,6 +169,35 @@
   .set-head h2 { font-size: 1.5rem; font-weight: 800; }
   .set-sec { margin-bottom: 30px; }
   .set-sec h3 { font-size: .75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+
+  /* ---------- Reset data ---------- */
+  .danger-sec { margin-top: 10px; padding-top: 22px; border-top: 1px dashed rgba(255,255,255,.12); }
+  .reset-btn {
+    display: block; width: 100%; padding: 15px 40px; border: 0; cursor: pointer;
+    font: 800 .95rem/1 inherit; font-family: inherit; letter-spacing: 3px; text-transform: uppercase; color: #ff4d5e;
+    background: rgba(255, 56, 76, .12);
+    clip-path: polygon(22px 0, calc(100% - 22px) 0, 100% 50%, calc(100% - 22px) 100%, 22px 100%, 0 50%);
+    box-shadow: inset 0 0 0 2px rgba(255, 77, 94, .7);
+    transition: background .2s, color .2s, transform .2s;
+  }
+  .reset-btn:hover { background: #ff3b4e; color: #fff; transform: translateY(-1px); }
+  .confirm-overlay {
+    position: fixed; inset: 0; z-index: 400; display: grid; place-items: center; padding: 20px;
+    background: rgba(3, 4, 10, .78); backdrop-filter: blur(6px);
+    opacity: 0; visibility: hidden; transition: opacity .25s, visibility 0s .25s;
+  }
+  .confirm-overlay.open { opacity: 1; visibility: visible; transition: opacity .25s; }
+  .confirm {
+    width: min(420px, 100%); padding: 28px 28px 24px; text-align: center;
+    background: rgba(18, 20, 34, .98); border: 1px solid rgba(255, 77, 94, .55);
+    clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
+  }
+  .confirm h3 { font-size: 1.35rem; color: #ff4d5e; margin-bottom: 10px; }
+  .confirm p { color: var(--muted); line-height: 1.55; margin-bottom: 22px; }
+  .confirm .row { display: flex; gap: 10px; }
+  .confirm .row button { flex: 1; padding: 12px; font-weight: 700; cursor: pointer; border: 0; border-radius: 8px; font-family: inherit; font-size: .95rem; }
+  .confirm .c-cancel { background: rgba(255,255,255,.1); color: #fff; }
+  .confirm .c-yes { background: #ff3b4e; color: #fff; }
   .set-note { margin-top: 12px; font-size: .82rem; color: var(--muted); line-height: 1.5; }
 
   .swatches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -1230,7 +1259,20 @@
       <label class="switch-row"><span>Particles, neon grid and scanlines</span><input type="checkbox" id="fxToggle" checked></label>
       <p class="set-note">Turn this off if the page feels slow on your device.</p>
     </section>
+
+    <section class="set-sec danger-sec">
+      <button class="reset-btn" id="resetBtn" type="button">Reset data</button>
+      <p class="set-note">Clears your favourites, playtime, theme, volume, speed test and every other saved setting on this site.</p>
+    </section>
   </aside>
+</div>
+
+<div class="confirm-overlay" id="confirmReset" role="alertdialog" aria-modal="true" aria-labelledby="crTitle">
+  <div class="confirm">
+    <h3 id="crTitle">Are you sure?</h3>
+    <p>This will erase all your saved data on this site. <strong style="color:#fff">This cannot be undone.</strong></p>
+    <div class="row"><button class="c-cancel" id="crNo" type="button">Cancel</button><button class="c-yes" id="crYes" type="button">Yes, reset</button></div>
+  </div>
 </div>
 
 <!-- Game details popup -->
@@ -2661,6 +2703,34 @@
   window.addEventListener("online", renderEstimates);
 
   $("year").textContent = new Date().getFullYear();
+
+  /* ---------- Reset data ---------- */
+  (function () {
+    const box = document.getElementById("confirmReset");
+    const open = () => { box.classList.add("open"); document.getElementById("crNo").focus(); };
+    const close = () => box.classList.remove("open");
+    document.getElementById("resetBtn").addEventListener("click", open);
+    document.getElementById("crNo").addEventListener("click", close);
+    box.addEventListener("click", (e) => { if (e.target === box) close(); });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && box.classList.contains("open")) { e.stopImmediatePropagation(); e.preventDefault(); close(); }
+    }, true);
+    document.getElementById("crYes").addEventListener("click", async () => {
+      /* stop anything from saving again while the page reloads */
+      try { Storage.prototype.setItem = function () {}; } catch (e) {}
+      try { localStorage.clear(); } catch (e) {}
+      try { sessionStorage.clear(); } catch (e) {}
+      try {                                              /* cookies for this site */
+        document.cookie.split(";").forEach((c) => {
+          const name = c.split("=")[0].trim(); if (!name) return;
+          ["", "; domain=" + location.hostname].forEach((d) => { document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/" + d; });
+        });
+      } catch (e) {}
+      try { if (window.caches) (await caches.keys()).forEach((k) => caches.delete(k)); } catch (e) {}
+      try { if (indexedDB.databases) (await indexedDB.databases()).forEach((d) => d.name && indexedDB.deleteDatabase(d.name)); } catch (e) {}
+      location.reload();
+    });
+  })();
 </script>
 </body>
 </html>
