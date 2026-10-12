@@ -171,19 +171,6 @@
   .set-sec h3 { font-size: .75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
   .set-note { margin-top: 12px; font-size: .82rem; color: var(--muted); line-height: 1.5; }
 
-  .reset-sec { margin-top: 42px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.12); }
-  .reset-data-btn {
-    display: block; width: 100%; padding: 14px 24px;
-    color: #fff; background: linear-gradient(135deg, #ff3b4f, #b90024);
-    border: 1px solid rgba(255,110,125,.8);
-    clip-path: polygon(7% 0, 93% 0, 100% 50%, 93% 100%, 7% 100%, 0 50%);
-    font-weight: 900; font-size: .95rem; letter-spacing: 2px; text-transform: uppercase;
-    cursor: pointer; transition: filter .2s ease, transform .2s ease;
-  }
-  .reset-data-btn:hover { filter: brightness(1.18); transform: translateY(-1px); }
-  .reset-data-btn:active { transform: translateY(1px) scale(.99); }
-  .reset-data-btn:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
-
   .swatches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
   .swatch {
     display: flex; flex-direction: column; align-items: center; gap: 8px;
@@ -1243,12 +1230,6 @@
       <label class="switch-row"><span>Particles, neon grid and scanlines</span><input type="checkbox" id="fxToggle" checked></label>
       <p class="set-note">Turn this off if the page feels slow on your device.</p>
     </section>
-
-    <section class="set-sec reset-sec">
-      <h3>Danger zone</h3>
-      <button class="reset-data-btn" id="resetDataBtn" type="button">Reset Data</button>
-      <p class="set-note">Permanently clears saved ROG-Games settings, favorites, playtime, and other site data stored in this browser.</p>
-    </section>
   </aside>
 </div>
 
@@ -2276,44 +2257,7 @@
   $("setClose").addEventListener("click", closeSettings);
   setOverlay.addEventListener("click", (e) => { if (e.target === setOverlay) closeSettings(); });
 
-  /* ---------- Reset locally saved ROG-Games data ---------- */
-  $("resetDataBtn").addEventListener("click", async () => {
-    const confirmed = window.confirm(
-      "Are you sure you want to reset all ROG-Games data saved in this browser?\n\nThis cannot be undone. Your saved settings, favorites, and playtime will be erased."
-    );
-    if (!confirmed) return;
 
-    try { localStorage.clear(); } catch (e) {}
-    try { sessionStorage.clear(); } catch (e) {}
-
-    // Remove cookies belonging to this site and the current path.
-    try {
-      document.cookie.split(";").forEach((cookie) => {
-        const name = cookie.split("=")[0].trim();
-        if (!name) return;
-        document.cookie = name + "=; Max-Age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax";
-      });
-    } catch (e) {}
-
-    // Clear same-origin Cache Storage and IndexedDB when supported.
-    try {
-      if ("caches" in window) {
-        const cacheNames = await caches.keys();
-        await Promise.all(cacheNames.map((name) => caches.delete(name)));
-      }
-    } catch (e) {}
-    try {
-      if (indexedDB.databases) {
-        const databases = await indexedDB.databases();
-        await Promise.all(databases.map((db) => db.name ? new Promise((resolve) => {
-          const request = indexedDB.deleteDatabase(db.name);
-          request.onsuccess = request.onerror = request.onblocked = () => resolve();
-        }) : Promise.resolve()));
-      }
-    } catch (e) {}
-
-    window.location.reload();
-  });
 
 
   /* ============================================================
