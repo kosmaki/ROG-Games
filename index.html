@@ -1561,8 +1561,9 @@
     g.fallbackImage = coverArt(g, false);
     g.fallbackHeroImage = coverArt(g, true);
     const appId = STEAM_APP_IDS[g.title];
-    g.image = appId ? `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appId}/library_600x900.jpg` : g.fallbackImage;
-    g.heroImage = appId ? `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appId}/header.jpg` : g.fallbackHeroImage;
+    // Keep explicitly supplied artwork; only use Steam artwork when a game has no custom image.
+    g.image = g.image || (appId ? `https://cdn.cloudflare.steamstatic.com/steam/apps/${appId}/library_600x900.jpg` : g.fallbackImage);
+    g.heroImage = g.heroImage || (appId ? `https://cdn.cloudflare.steamstatic.com/steam/apps/${appId}/header.jpg` : (g.image || g.fallbackHeroImage));
   });
 
   const gradient = (g) => `linear-gradient(135deg, ${g.colors[0]}, ${g.colors[1]})`;
