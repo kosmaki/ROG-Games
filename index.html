@@ -367,6 +367,7 @@
   .overlay.open { opacity: 1; pointer-events: auto; }
 
   .modal {
+    position: relative;
     width: min(520px, 100%);
     background: rgba(19, 23, 38, .88);
     backdrop-filter: blur(14px);
@@ -382,6 +383,18 @@
     display: grid; place-items: center;
     font-size: 3.4rem;
   }
+  .open-new-tab {
+    position: absolute; z-index: 2; top: 14px; right: 14px;
+    width: 42px; height: 42px; padding: 0;
+    display: grid; place-items: center;
+    color: #fff; background: rgba(8, 10, 18, .78);
+    border: 1px solid rgba(255,255,255,.2); border-radius: 12px;
+    text-decoration: none; backdrop-filter: blur(10px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.3);
+  }
+  .open-new-tab:hover { background: var(--accent); transform: translateY(-2px); }
+  .open-new-tab svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .open-new-tab[hidden] { display: none; }
   .modal-body { padding: 26px 28px 30px; }
   .modal-body h2 { font-size: 1.6rem; margin-bottom: 8px; }
   .modal-body p { color: var(--muted); line-height: 1.55; margin-bottom: 24px; }
@@ -408,13 +421,16 @@
 
   /* ---------- Player ---------- */
   .player {
-    position: fixed; inset: 0; z-index: 60;
+    position: fixed; inset: 4vh 4vw; z-index: 60;
     background: #000;
     display: flex; flex-direction: column;
-    transform: translateY(100%);
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 0 0 100vmax rgba(3, 4, 10, .82), 0 24px 100px rgba(0,0,0,.65);
+    transform: translateY(110%) scale(.98);
     transition: transform .6s var(--ease);
   }
-  .player.open { transform: translateY(0); }
+  .player.open { transform: translateY(0) scale(1); }
   .player-bar {
     display: flex; align-items: center; justify-content: space-between;
     padding: 12px 20px;
@@ -424,8 +440,14 @@
   .player-bar strong { font-size: 1rem; }
   .player-bar .btns { display: flex; gap: 10px; }
   .player-bar button { padding: 9px 16px; font-size: .9rem; }
-  .player-stage { flex: 1; position: relative; }
-  .player-stage iframe { width: 100%; height: 100%; border: 0; background: #000; }
+  .player-stage { flex: 1; min-height: 0; position: relative; background: #000; }
+  .player-stage iframe { display: block; width: 100%; height: 100%; border: 0; background: #000; }
+  @media (max-width: 640px) {
+    .player { inset: 2vh 2vw; border-radius: 14px; }
+    .player-bar { padding: 10px 12px; gap: 8px; }
+    .player-bar .btns { gap: 6px; }
+    .player-bar button { padding: 8px 10px; font-size: .8rem; }
+  }
   body.bp-open #fsBtn { display: none; }   /* Big Picture is already fullscreen */
   .empty {
     position: absolute; inset: 0;
@@ -1212,6 +1234,9 @@
 <!-- Game details popup -->
 <div class="overlay" id="overlay">
   <div class="modal" id="modal">
+    <a class="open-new-tab" id="mOpenTab" href="#" target="_blank" rel="noopener noreferrer" aria-label="Open game in a new tab" title="Open game in a new tab" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7"></path><path d="M10 14 21 3"></path><path d="M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"></path></svg>
+    </a>
     <div class="thumb" id="mThumb"></div>
     <div class="modal-body">
       <h2 id="mTitle"></h2>
@@ -1488,10 +1513,29 @@
   /* Cover artwork: use real game cover images where available, with original non-emoji art as a reliable fallback. */
   function coverArt(g, wide = false) {
     const [c1, c2] = g.colors || ["#7c5cff", "#161b36"];
-    const esc = (value) => String(value || "").replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
-    const title = esc(g.title || "ROG");
-    const w = wide ? 1200 : 640, h = wide ? 520 : 900;
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient><radialGradient id="glow"><stop stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><rect width="${w}" height="${h}" fill="url(#g)"/><circle cx="${w*.78}" cy="${h*.24}" r="${h*.5}" fill="url(#glow)"/><path d="M0 ${h*.76} L${w*.24} ${h*.45} L${w*.43} ${h*.64} L${w*.72} ${h*.28} L${w} ${h*.48} V${h} H0Z" fill="#070914" opacity=".7"/><path d="M${w*.12} ${h*.28} L${w*.28} ${h*.12} L${w*.42} ${h*.28} L${w*.28} ${h*.44}Z" fill="#fff" fill-opacity=".14"/><rect x="${w*.055}" y="${h*.055}" width="${w*.89}" height="${h*.89}" rx="${wide?34:28}" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="3"/><text x="${w*.09}" y="${h*(wide?.69:.67)}" fill="#fff" font-family="Arial,sans-serif" font-weight="900" font-size="${wide?74:55}">${title}</text><text x="${w*.09}" y="${h*(wide?.83:.78)}" fill="#fff" fill-opacity=".78" font-family="Arial,sans-serif" font-size="${wide?23:20}" letter-spacing="5">ROG GAME LIBRARY</text></svg>`;
+    const esc = (v) => String(v || "").replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+    const w = wide ? 1200 : 800, h = wide ? 520 : 500;
+    const S = Math.min(w, h);                      /* art unit */
+    const cx = wide ? w * .72 : w * .5, cy = wide ? h * .46 : h * .3;
+    let seed = 0; for (const ch of String(g.title)) seed = (seed * 31 + ch.charCodeAt(0)) >>> 0;
+    const rnd = () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296;
+    const T = String(g.title || "ROG");
+    /* original hand-drawn motif per game; unknown titles get a seeded pattern */
+    let art = "";
+    if (/golf/i.test(T)) art = `<ellipse cx="${cx}" cy="${cy+S*.2}" rx="${S*.36}" ry="${S*.1}" fill="#0a3d1f" opacity=".8"/><circle cx="${cx-S*.1}" cy="${cy+S*.14}" r="${S*.045}" fill="#fff"/><path d="M${cx+S*.1} ${cy+S*.2} V${cy-S*.22}" stroke="#fff" stroke-width="${S*.015}"/><path d="M${cx+S*.1} ${cy-S*.22} l${S*.14} ${S*.05} l-${S*.14} ${S*.05}z" fill="#ff4d6d"/>`;
+    else if (/wave/i.test(T)) art = `<path d="M${cx-S*.42} ${cy+S*.1} l${S*.14} -${S*.25} l${S*.14} ${S*.3} l${S*.14} -${S*.3} l${S*.14} ${S*.3} l${S*.14} -${S*.25}" fill="none" stroke="#fff" stroke-width="${S*.045}" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${cx+S*.42}" cy="${cy-S*.15}" r="${S*.05}" fill="#fff"/>`;
+    else if (/bottle/i.test(T)) art = `<g transform="rotate(25 ${cx} ${cy})"><rect x="${cx-S*.07}" y="${cy-S*.3}" width="${S*.14}" height="${S*.18}" rx="${S*.03}" fill="#fff" opacity=".9"/><rect x="${cx-S*.13}" y="${cy-S*.14}" width="${S*.26}" height="${S*.38}" rx="${S*.06}" fill="#fff" opacity=".75"/><rect x="${cx-S*.05}" y="${cy-S*.34}" width="${S*.1}" height="${S*.05}" rx="${S*.015}" fill="#ffb347"/></g><path d="M${cx-S*.38} ${cy+S*.3} q${S*.2} -${S*.3} ${S*.5} -${S*.05}" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="${S*.012}" stroke-dasharray="${S*.03} ${S*.03}"/>`;
+    else if (/mine/i.test(T)) { const n = 4, q = S*.12, x0 = cx - n*q/2, y0 = cy - n*q/2; for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) art += `<rect x="${x0+i*q+3}" y="${y0+j*q+3}" width="${q-6}" height="${q-6}" rx="${q*.15}" fill="#fff" opacity="${(i+j)%2?.22:.38}"/>`; art += `<circle cx="${x0+q*2.5}" cy="${y0+q*1.5}" r="${q*.28}" fill="#ff4d6d"/><path d="M${x0+q*2.5} ${y0+q*1.05} v${q*.9} M${x0+q*2.05} ${y0+q*1.5} h${q*.9}" stroke="#ff4d6d" stroke-width="3"/>`; }
+    else for (let i = 0; i < 7; i++) { const r = S * (.05 + rnd() * .16); art += `<circle cx="${(cx + (rnd()-.5)*S*.9).toFixed(0)}" cy="${(cy + (rnd()-.5)*S*.6).toFixed(0)}" r="${r.toFixed(0)}" fill="#fff" opacity="${(.08 + rnd()*.2).toFixed(2)}"/>`; }
+    /* title: wrapped onto up to 3 lines, sized to fit */
+    const words = T.split(/\s+/), lines = [""]; const maxCh = wide ? 20 : 18;
+    words.forEach(wd => { const l = lines[lines.length-1]; if ((l + " " + wd).trim().length > maxCh && l) lines.push(wd); else lines[lines.length-1] = (l + " " + wd).trim(); });
+    const fs = Math.min(wide ? 84 : 76, (wide ? w*.5 : w*.56) / Math.max(4, Math.max(...lines.map(l => l.length)) * .62));
+    const ty = h * (wide ? .55 : .68) - (wide ? 0 : (Math.min(3, lines.length) - 1) * fs * .5);
+    const tx = wide ? w*.07 : w*.5, anc = wide ? "start" : "middle";
+    const text = lines.slice(0,3).map((l, i) => `<text x="${tx}" text-anchor="${anc}" y="${ty + i*fs*1.08}" fill="#fff" font-family="Arial,sans-serif" font-weight="900" font-size="${fs.toFixed(0)}" style="paint-order:stroke" stroke="#000" stroke-opacity=".35" stroke-width="6">${esc(l)}</text>`).join("");
+    const tag = esc((g.styles || []).join(" · ").toUpperCase());
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient><radialGradient id="glow"><stop stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".6"/></linearGradient></defs><rect width="${w}" height="${h}" fill="url(#g)"/><circle cx="${cx}" cy="${cy}" r="${S*.6}" fill="url(#glow)"/>${art}<rect width="${w}" height="${h}" fill="url(#fade)"/>${text}<text x="${tx}" text-anchor="${anc}" y="${h*(wide?.9:.92)}" fill="#fff" fill-opacity=".8" font-family="Arial,sans-serif" font-weight="700" font-size="${wide?22:20}" letter-spacing="4">${tag}</text></svg>`;
     return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
   }
   const STEAM_APP_IDS = {
@@ -1648,6 +1692,11 @@
     $("mThumb").textContent = g.image ? "" : g.emoji;
     $("mTitle").textContent = g.title;
     $("mDesc").textContent = g.desc;
+    const openTab = $("mOpenTab");
+    openTab.href = g.url || "#";
+    openTab.hidden = !g.url;
+    openTab.setAttribute("aria-label", "Open " + g.title + " in a new tab");
+    openTab.title = "Open " + g.title + " in a new tab";
     $("mMeta").textContent = metaText(g);
     $("mMeta").hidden = !$("mMeta").textContent;
     const source = $("mSource");
@@ -1662,17 +1711,24 @@
 
   /* ---------- Player (shared by normal mode and Big Picture) ---------- */
   function launchGame(g) {
-    if (g.url) {
-      /* Navigate this tab directly to the game's actual HTML file. */
-      window.location.assign(g.url);
-      return;
-    }
     $("pTitle").textContent = g.title;
-    stage.innerHTML = `<div class="empty"><div>
-      <div style="font-size:3rem;margin-bottom:12px">${g.emoji}</div>
-      <strong style="color:#fff">${g.title}</strong> is currently unavailable.<br>
-      Check back when its game file is added.
-    </div></div>`;
+    if (g.url) {
+      /* Keep the game on this site in a framed player; allow games to request fullscreen. */
+      const frame = document.createElement("iframe");
+      frame.src = g.url;
+      frame.title = g.title;
+      frame.allow = "fullscreen; autoplay; gamepad";
+      frame.allowFullscreen = true;
+      frame.referrerPolicy = "strict-origin-when-cross-origin";
+      frame.loading = "eager";
+      stage.replaceChildren(frame);
+    } else {
+      stage.innerHTML = `<div class="empty"><div>
+        <div style="font-size:3rem;margin-bottom:12px">${g.emoji}</div>
+        <strong style="color:#fff">${g.title}</strong> is currently unavailable.<br>
+        Check back when its game file is added.
+      </div></div>`;
+    }
     player.classList.add("open");
   }
 
@@ -1691,10 +1747,15 @@
     window.focus();                      /* give keyboard control back to the menu */
   }
   $("exitBtn").addEventListener("click", () => { Sound.back(); exitPlayer(); });
-  $("fsBtn").addEventListener("click", () => {
+  $("fsBtn").addEventListener("click", async () => {
     Sound.click();
     const el = stage.querySelector("iframe") || stage;
-    if (el.requestFullscreen) el.requestFullscreen();
+    try {
+      if (el.requestFullscreen) await el.requestFullscreen();
+      else if (stage.requestFullscreen) await stage.requestFullscreen();
+    } catch (err) {
+      $("fsBtn").title = "Fullscreen is blocked by this game host";
+    }
   });
 
   /* ============================================================
