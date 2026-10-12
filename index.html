@@ -1188,7 +1188,9 @@
         <select id="fSort" aria-label="Sort games">
           <option value="default">Default order</option>
           <option value="az">Name, A to Z</option>
+          <option value="za">Name, Z to A</option>
           <option value="size">Smallest download first</option>
+          <option value="large">Largest download first</option>
           <option value="short">Shortest playtime first</option>
           <option value="long">Longest playtime first</option>
         </select>
@@ -2450,9 +2452,14 @@
     });
     const key = {
       default: (g, i) => i, az: (g) => g.title.toLowerCase(),
-      size: (g) => g.sizeMB || 1e9, short: (g) => playSeconds(g), long: (g) => -playSeconds(g),
+      za: (g) => g.title.toLowerCase(), size: (g) => g.sizeMB || 1e9,
+      large: (g) => -(g.sizeMB || 0), short: (g) => playSeconds(g), long: (g) => -playSeconds(g),
     }[F.sort];
-    games.map((g, i) => i).sort((a, b) => { const x = key(games[a], a), y = key(games[b], b); return x < y ? -1 : x > y ? 1 : a - b; })
+    games.map((g, i) => i) .sort((a, b) => {
+        const x = key(games[a], a), y = key(games[b], b);
+        const cmp = x < y ? -1 : x > y ? 1 : a - b;
+        return F.sort === "za" ? -cmp : cmp;
+      })
       .forEach((idx, rank) => { gameCards[idx].style.order = rank; });
     games.forEach((g, i) => { gameCards[i].style.display = keep[i] ? "" : "none"; if (keep[i]) shown++; });
 
