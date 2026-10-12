@@ -1315,12 +1315,10 @@
             Leave it empty ("") to keep it as a placeholder.
      ============================================================ */
   const games = [
-    { title: "Game One",   desc: "Placeholder description for the first game.",  emoji: "🚀", colors: ["#7c5cff", "#3a2a9e"], image: "", styles: ["Arcade"], mins: 10, sizeMB: 12, url: "" },
-    { title: "Game Two",   desc: "Placeholder description for the second game.", emoji: "🏎️", colors: ["#00d4ff", "#0a5f8a"], image: "", styles: ["Racing"], mins: 15, sizeMB: 45, url: "" },
-    { title: "Game Three", desc: "Placeholder description for the third game.",  emoji: "🧩", colors: ["#ff5c8a", "#9e2a55"], image: "", styles: ["Puzzle"], mins: 30, sizeMB: 8, url: "" },
-    { title: "Game Four",  desc: "Placeholder description for the fourth game.", emoji: "⚔️", colors: ["#ffb347", "#a15a0a"], image: "", styles: ["Action", "RPG"], mins: 90, sizeMB: 180, url: "" },
-    { title: "Game Five",  desc: "Placeholder description for the fifth game.",  emoji: "🌌", colors: ["#4ade80", "#14693a"], image: "", styles: ["Adventure"], mins: 60, sizeMB: 120, url: "" },
-    { title: "Game Six",   desc: "Placeholder description for the sixth game.",  emoji: "🎯", colors: ["#a78bfa", "#4c2d9e"], image: "", styles: ["Arcade", "Skill"], mins: 5, sizeMB: 5, url: "" },
+    { title: "Neon Snake",   desc: "Classic snake with a neon glow. Eat, grow, speed up, and try not to bite yourself. Arrow keys, WASD or swipe.", emoji: "🐍", colors: ["#00e5ff", "#0a4a6a"], image: "", styles: ["Arcade", "Classic"], mins: 5, sizeMB: 0.01, url: "games/neon-snake.html" },
+    { title: "Void Dodger",  desc: "Pilot a tiny ship through a rain of rocks that gets faster the longer you live. How long can you last?", emoji: "🚀", colors: ["#7c5cff", "#2a1a7e"], image: "", styles: ["Arcade", "Skill"], mins: 5, sizeMB: 0.01, url: "games/void-dodger.html" },
+    { title: "Brick Breaker", desc: "Bounce the ball, smash every brick, clear levels. Mouse, touch or arrow keys. Aim your shots with the paddle edge.", emoji: "🧱", colors: ["#ff5c8a", "#7e1f45"], image: "", styles: ["Arcade", "Skill"], mins: 10, sizeMB: 0.01, url: "games/brick-breaker.html" },
+    { title: "Memory Flip",  desc: "Flip cards and find all eight matching pairs in as few moves as you can. A relaxed brain-teaser.", emoji: "🧠", colors: ["#4ade80", "#14693a"], image: "", styles: ["Puzzle", "Casual"], mins: 3, sizeMB: 0.01, url: "games/memory-flip.html" },
   ];
 
   const $ = (id) => document.getElementById(id);
@@ -1472,7 +1470,7 @@
   }
 
   /* ---------- Helpers: sizes, play time, load-time estimate, favourites ---------- */
-  const fmtSize = (mb) => mb >= 1000 ? (mb / 1000).toFixed(1).replace(/\.0$/, "") + " GB" : mb + " MB";
+  const fmtSize = (mb) => mb >= 1000 ? (mb / 1000).toFixed(1).replace(/\.0$/, "") + " GB" : mb < 1 ? "under 1 MB" : mb + " MB";
   const fmtPlay = (m) => m < 60 ? m + " min" : (+(m / 60).toFixed(1)) + " h";
   function fmtTime(sec) {
     if (sec < 60) return "~" + Math.max(1, Math.round(sec)) + " s";
