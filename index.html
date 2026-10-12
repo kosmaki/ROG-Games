@@ -932,6 +932,105 @@
     .readout { max-width: 440px; }
     .hero-keys { display: none; }
   }
+
+  /* ======================================================================
+     SPEED TEST, LIBRARY, FILTERS
+     ====================================================================== */
+  .hex {
+    --pc: #4ade80;
+    position: relative; flex-shrink: 0; margin-right: 12px;
+    display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+    width: 50px; height: 44px; background: var(--pc);
+    clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  }
+  .hex::before { content: ""; position: absolute; inset: 2px; background: #0b0d16; clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }
+  .hex b, .hex small { position: relative; z-index: 1; line-height: 1; color: #fff; font-family: "Chakra Petch", sans-serif; }
+  .hex b { font-size: .98rem; font-weight: 700; }
+  .hex small { margin-top: 2px; font-size: .6rem; color: var(--pc); }
+  .readout dt { display: flex; align-items: center; }
+
+  .tool-btn {
+    display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px;
+    font-size: .95rem; font-weight: 600; color: var(--text);
+    background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); border-radius: 10px;
+  }
+  .tool-btn:hover { background: rgba(255, 255, 255, .13); }
+  .tool-btn.on { color: #fff; border-color: transparent; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+  .badge { min-width: 21px; height: 21px; padding: 0 6px; display: inline-grid; place-items: center; border-radius: 11px; font-size: .76rem; font-weight: 700; color: #05060c; background: var(--accent-2); }
+  .tool-btn.on .badge { background: #fff; }
+  .star-ico { color: #ffd23b; }
+
+  .filters { width: 100%; max-width: 1300px; margin: 0 auto; padding: 0 6vw; display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s var(--ease); }
+  .filters.open { grid-template-rows: 1fr; }
+  .fp { overflow: hidden; min-height: 0; }
+  .fp-inner {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 22px 34px;
+    margin: 10px 0 6px; padding: 20px 22px 22px;
+    background: rgba(10, 12, 22, .7); border: 1px solid rgba(var(--accent-rgb), .3); backdrop-filter: blur(10px);
+    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+  }
+  .fgroup h4 { margin-bottom: 10px; font-size: .85rem; font-weight: 600; color: var(--muted); }
+  .fchips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .fchips .chip small { font-weight: 500; opacity: .7; margin-left: 4px; }
+  .fgroup select {
+    width: 100%; height: 40px; padding: 0 12px; color: var(--text); font: inherit; font-family: "Barlow", sans-serif;
+    background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .14); border-radius: 8px;
+  }
+  .fgroup select option { background: #131726; }
+  .fclear { align-self: end; justify-self: start; padding: 9px 16px; font-size: .88rem; color: var(--muted); background: rgba(255, 255, 255, .06); border-radius: 8px; }
+  .fclear:hover { color: var(--text); background: rgba(255, 255, 255, .12); }
+
+  .meta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 8px; font-size: .84rem; color: var(--muted); }
+  .m-est { color: var(--accent-2); font-weight: 600; }
+  .mode-capsule .meta { display: none; }
+  .fav-badge { position: absolute; top: 9px; right: 14px; font-size: 1.15rem; color: #ffd23b; text-shadow: 0 0 12px rgba(255, 210, 59, .8); pointer-events: none; }
+  .m-meta { margin: -12px 0 20px; font-size: .9rem; color: var(--accent-2); }
+  .actions .starred, .bp-dactions .starred { color: #ffd23b; }
+  .bp-fav { position: absolute; top: 10px; right: 12px; z-index: 2; display: none; font-size: 1.3rem; color: #ffd23b; text-shadow: 0 0 14px rgba(255, 210, 59, .9); }
+  .bp-card.fav .bp-fav { display: block; }
+  .bp-meta-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+
+  /* Speed test panel */
+  .panel-overlay {
+    position: fixed; inset: 0; z-index: 75; display: grid; place-items: center; padding: 20px;
+    background: rgba(4, 5, 10, .72); backdrop-filter: blur(8px);
+    opacity: 0; visibility: hidden; transition: opacity .35s var(--ease), visibility 0s .35s;
+  }
+  .panel-overlay.open { opacity: 1; visibility: visible; transition: opacity .35s var(--ease); }
+  .st {
+    width: min(580px, 100%); max-height: 94vh; overflow-y: auto; padding: 24px 30px 28px;
+    background: rgba(13, 16, 29, .95); border: 1px solid rgba(var(--accent-rgb), .45);
+    clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 28px 100%, 0 calc(100% - 28px));
+    transform: translateY(40px) scale(.95); transition: transform .5s var(--ease);
+  }
+  .panel-overlay.open .st { transform: none; }
+  .st-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .st-head h2 { font-size: 1.5rem; font-weight: 700; }
+  .gauge { position: relative; width: min(390px, 100%); margin: 0 auto; }
+  .gauge svg { display: block; width: 100%; }
+  .g-track, .g-fill { fill: none; stroke-width: 14; stroke-linecap: round; }
+  .g-track { stroke: rgba(255, 255, 255, .1); }
+  .g-fill { stroke-dasharray: 100; stroke-dashoffset: 100; filter: drop-shadow(0 0 8px rgba(var(--accent-rgb), .85)); }
+  .g-tick { fill: var(--muted); font-size: 9px; font-family: "Chakra Petch", sans-serif; text-anchor: middle; }
+  .g-read { position: absolute; left: 0; right: 0; bottom: 4%; text-align: center; }
+  .g-read b { display: block; font-family: "Chakra Petch", sans-serif; font-size: clamp(3rem, 12vw, 4.4rem); line-height: 1; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .g-read span { color: var(--muted); }
+  .g-read em { display: block; margin-top: 4px; font-style: normal; font-weight: 600; color: var(--accent-2); }
+  .st-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 16px; }
+  .tile { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 6px 10px; text-align: center; background: rgba(255, 255, 255, .05); border-bottom: 2px solid rgba(255, 255, 255, .1); transition: border-color .3s; }
+  .tile.on { border-color: var(--accent-2); }
+  .tile b { font-size: 1.3rem; font-variant-numeric: tabular-nums; }
+  .tile span { font-size: .8rem; color: var(--muted); }
+  .tile .hex { margin: 0; width: 46px; height: 40px; }
+  .st-note { min-height: 1.4em; margin-top: 14px; text-align: center; font-size: .9rem; color: var(--muted); line-height: 1.5; }
+  .st-note.err { color: #ffb36b; }
+  .st-actions { display: flex; justify-content: center; margin-top: 8px; }
+  .st-est { margin-top: 20px; padding-top: 14px; border-top: 1px dashed rgba(255, 255, 255, .15); }
+  .st-est h3 { font-size: 1rem; margin-bottom: 4px; }
+  .st-est p { font-size: .85rem; color: var(--muted); margin-bottom: 8px; line-height: 1.5; }
+  .st-row { display: flex; justify-content: space-between; gap: 14px; padding: 7px 0; font-size: .96rem; color: #d6daea; border-bottom: 1px solid rgba(255, 255, 255, .06); }
+  .st-row span:last-child { font-weight: 600; color: #fff; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  @media (max-width: 460px) { .st-tiles { grid-template-columns: repeat(2, 1fr); } .st { padding: 20px 18px 24px; } }
 </style>
 <script>try { var t = localStorage.getItem("rog-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
@@ -971,11 +1070,13 @@
     <div class="hero-type"><span id="typed"></span><i class="caret"></i></div>
     <div class="hero-cta">
       <button class="cta" id="heroBp">▶ Big Picture</button>
+      <button class="cta ghost" id="heroSpeed">⚡ Speed test</button>
       <a class="cta ghost" href="#games">Browse games</a>
     </div>
     <div class="hero-keys">
       <span><kbd>B</kbd> Big Picture</span>
       <span><kbd>/</kbd> Search</span>
+      <span><kbd>T</kbd> Speed test</span>
       <span><kbd>A</kbd><kbd>D</kbd> Move in Big Picture</span>
     </div>
   </div>
@@ -984,7 +1085,7 @@
     <dl>
       <div><dt>Games loaded</dt><dd id="roGames">0</dd></div>
       <div><dt>Playable now</dt><dd id="roPlay">0</dd></div>
-      <div><dt>Frame rate</dt><dd><span id="roFps">60</span> fps</dd></div>
+      <div class="fpsrow"><dt><span class="hex" id="hexPing" hidden><b id="pingVal">--</b><small>ms</small></span>Frame rate</dt><dd><span id="roFps">60</span> fps</dd></div>
       <div class="bar"><i id="roBar"></i></div>
       <div><dt>Controller</dt><dd id="roPad">Not found</dd></div>
       <div><dt>Theme</dt><dd id="roTheme">Violet</dd></div>
@@ -1001,6 +1102,8 @@
       <input type="text" id="search" placeholder="Search games" autocomplete="off" spellcheck="false" aria-label="Search games">
       <kbd>/</kbd>
     </label>
+    <button class="tool-btn" id="filtBtn" aria-expanded="false" aria-controls="filters">Filters <span class="badge" id="filtCount" hidden>0</span></button>
+    <button class="tool-btn" id="libBtn" title="Games you starred"><span class="star-ico">★</span> Library <span class="badge" id="libCount" hidden>0</span></button>
     <div class="toggle" id="toggle">
       <button data-mode="list">☰ List</button>
       <button data-mode="grid">▦ Grid</button>
@@ -1008,9 +1111,56 @@
     </div>
   </div>
 </div>
-<div class="chips" id="chips" aria-label="Filter by genre"></div>
+<div class="filters" id="filters">
+  <div class="fp">
+    <div class="fp-inner">
+      <div class="fgroup"><h4>Style</h4><div class="fchips" id="fStyles"></div></div>
+      <div class="fgroup"><h4>Playtime</h4><div class="fchips" id="fPlay"></div></div>
+      <div class="fgroup"><h4>Show</h4><div class="fchips" id="fStatus"></div></div>
+      <div class="fgroup"><h4>Sort by</h4>
+        <select id="fSort" aria-label="Sort games">
+          <option value="default">Default order</option>
+          <option value="az">Name, A to Z</option>
+          <option value="size">Smallest download first</option>
+          <option value="short">Shortest playtime first</option>
+          <option value="long">Longest playtime first</option>
+        </select>
+      </div>
+      <button class="fclear" id="fClear">Clear filters</button>
+    </div>
+  </div>
+</div>
 <main class="grid mode-list" id="grid"></main>
-<div class="nores" id="noResults" hidden>Nothing matches <b id="noResultsQ"></b>.<br>Clear the search or pick another genre.</div>
+<div class="nores" id="noResults" hidden><span id="noResultsMsg"></span></div>
+
+<!-- Speed test -->
+<div class="panel-overlay" id="stOverlay">
+  <section class="st" role="dialog" aria-label="Speed test">
+    <div class="st-head"><h2>Speed test</h2><button class="icon-btn" id="stClose" aria-label="Close speed test">✕</button></div>
+    <div class="gauge">
+      <svg viewBox="0 0 260 160" aria-hidden="true">
+        <defs><linearGradient id="gGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" style="stop-color:var(--accent)"/><stop offset="1" style="stop-color:var(--accent-2)"/></linearGradient></defs>
+        <path class="g-track" d="M30 140 A100 100 0 0 1 230 140" pathLength="100"/>
+        <path class="g-fill" id="gFill" d="M30 140 A100 100 0 0 1 230 140" pathLength="100" stroke="url(#gGrad)"/>
+        <text class="g-tick" x="22" y="158">0</text><text class="g-tick" x="130" y="22">30</text><text class="g-tick" x="240" y="158">1000</text>
+      </svg>
+      <div class="g-read"><b id="gNum">0</b><span id="gUnit">Mbps</span><em id="gPhase">Ready</em></div>
+    </div>
+    <div class="st-tiles">
+      <div class="tile" id="tDown"><b>--</b><span>Download Mbps</span></div>
+      <div class="tile" id="tUp"><b>--</b><span>Upload Mbps</span></div>
+      <div class="tile" id="tPing"><span class="hex" id="tHex"><b>--</b><small>ms</small></span><span>Ping</span></div>
+      <div class="tile" id="tJit"><b>--</b><span>Jitter ms</span></div>
+    </div>
+    <p class="st-note" id="stNote">Measures your connection to see how long each game takes to load.</p>
+    <div class="st-actions"><button class="cta" id="stGo">Start test</button></div>
+    <div class="st-est" id="stEst" hidden>
+      <h3>How long each game takes to load</h3>
+      <p id="stEstNote"></p>
+      <div id="stEstList"></div>
+    </div>
+  </section>
+</div>
 
 
 <!-- Settings panel -->
@@ -1052,8 +1202,10 @@
     <div class="modal-body">
       <h2 id="mTitle"></h2>
       <p id="mDesc"></p>
+      <p class="m-meta" id="mMeta"></p>
       <div class="actions">
         <button class="play" id="playBtn">▶ Play</button>
+        <button class="ghost" id="mStar">☆ Star</button>
         <button class="ghost" id="closeModal">Close</button>
       </div>
     </div>
@@ -1086,18 +1238,20 @@
   <div class="bp-info" id="bpInfo">
     <h2 id="bpTitle"></h2>
     <p id="bpDesc"></p>
-    <span class="bp-chip" id="bpChip"></span>
+    <div class="bp-meta-row"><span class="bp-chip" id="bpChip"></span><span class="bp-chip" id="bpMeta" hidden></span></div>
   </div>
 
   <div class="bp-hints">
     <div class="hints-a">
       <span><kbd>A</kbd><kbd>D</kbd> or <kbd>←</kbd><kbd>→</kbd> Navigate</span>
       <span><kbd>Enter</kbd> Select</span>
+      <span><kbd>F</kbd> Star</span>
       <span><kbd>Esc</kbd> Exit</span>
     </div>
     <div class="hints-b">
       <span><kbd>A</kbd><kbd>D</kbd> or <kbd>←</kbd><kbd>→</kbd> Switch</span>
       <span><kbd>Enter</kbd> Confirm</span>
+      <span><kbd>F</kbd> Star</span>
       <span><kbd>Esc</kbd> Back</span>
     </div>
   </div>
@@ -1110,9 +1264,10 @@
         <div class="bp-eyebrow">Game details</div>
         <h2 id="bpDTitle"></h2>
         <p id="bpDDesc"></p>
-        <span class="bp-chip" id="bpDChip"></span>
+        <div class="bp-meta-row" style="justify-content:flex-start"><span class="bp-chip" id="bpDChip"></span><span class="bp-chip" id="bpDMeta" hidden></span></div>
         <div class="bp-dactions">
           <button class="bp-play focus" id="bpPlay">▶ Play</button>
+          <button id="bpStar">☆ Star</button>
           <button id="bpBack">Back</button>
         </div>
       </div>
@@ -1151,18 +1306,21 @@
               It becomes the blurred page background while you hover
               the game (and the cover art in Big Picture mode).
               Leave it empty ("") to use the colors instead.
-     - tags: genres shown as filter buttons, e.g. ["Arcade", "Puzzle"]
+     - styles:  the game's style(s), used by the Filters tab, e.g. ["Action", "RPG"]
+     - mins:    typical play session in minutes (Quick up to 15, Medium up to 60, Long above)
+     - sizeMB:  download size in megabytes. The speed test uses it to estimate load time.
+                (The numbers on the placeholder games are examples. Put the real size.)
      - url: path to the game's index.html, e.g. "games/my-game/index.html"
             or a full address if it lives in another repo.
             Leave it empty ("") to keep it as a placeholder.
      ============================================================ */
   const games = [
-    { title: "Game One",   desc: "Placeholder description for the first game.",  emoji: "🚀", colors: ["#7c5cff", "#3a2a9e"], image: "", tags: ["Space", "Arcade"], url: "" },
-    { title: "Game Two",   desc: "Placeholder description for the second game.", emoji: "🏎️", colors: ["#00d4ff", "#0a5f8a"], image: "", tags: ["Racing"], url: "" },
-    { title: "Game Three", desc: "Placeholder description for the third game.",  emoji: "🧩", colors: ["#ff5c8a", "#9e2a55"], image: "", tags: ["Puzzle"], url: "" },
-    { title: "Game Four",  desc: "Placeholder description for the fourth game.", emoji: "⚔️", colors: ["#ffb347", "#a15a0a"], image: "", tags: ["Action", "RPG"], url: "" },
-    { title: "Game Five",  desc: "Placeholder description for the fifth game.",  emoji: "🌌", colors: ["#4ade80", "#14693a"], image: "", tags: ["Space", "Adventure"], url: "" },
-    { title: "Game Six",   desc: "Placeholder description for the sixth game.",  emoji: "🎯", colors: ["#a78bfa", "#4c2d9e"], image: "", tags: ["Arcade", "Skill"], url: "" },
+    { title: "Game One",   desc: "Placeholder description for the first game.",  emoji: "🚀", colors: ["#7c5cff", "#3a2a9e"], image: "", styles: ["Arcade"], mins: 10, sizeMB: 12, url: "" },
+    { title: "Game Two",   desc: "Placeholder description for the second game.", emoji: "🏎️", colors: ["#00d4ff", "#0a5f8a"], image: "", styles: ["Racing"], mins: 15, sizeMB: 45, url: "" },
+    { title: "Game Three", desc: "Placeholder description for the third game.",  emoji: "🧩", colors: ["#ff5c8a", "#9e2a55"], image: "", styles: ["Puzzle"], mins: 30, sizeMB: 8, url: "" },
+    { title: "Game Four",  desc: "Placeholder description for the fourth game.", emoji: "⚔️", colors: ["#ffb347", "#a15a0a"], image: "", styles: ["Action", "RPG"], mins: 90, sizeMB: 180, url: "" },
+    { title: "Game Five",  desc: "Placeholder description for the fifth game.",  emoji: "🌌", colors: ["#4ade80", "#14693a"], image: "", styles: ["Adventure"], mins: 60, sizeMB: 120, url: "" },
+    { title: "Game Six",   desc: "Placeholder description for the sixth game.",  emoji: "🎯", colors: ["#a78bfa", "#4c2d9e"], image: "", styles: ["Arcade", "Skill"], mins: 5, sizeMB: 5, url: "" },
   ];
 
   const $ = (id) => document.getElementById(id);
@@ -1313,6 +1471,55 @@
     document.body.classList.toggle("has-bg", index >= 0);
   }
 
+  /* ---------- Helpers: sizes, play time, load-time estimate, favourites ---------- */
+  const fmtSize = (mb) => mb >= 1000 ? (mb / 1000).toFixed(1).replace(/\.0$/, "") + " GB" : mb + " MB";
+  const fmtPlay = (m) => m < 60 ? m + " min" : (+(m / 60).toFixed(1)) + " h";
+  function fmtTime(sec) {
+    if (sec < 60) return "~" + Math.max(1, Math.round(sec)) + " s";
+    if (sec < 3600) { const m = Math.floor(sec / 60), r = Math.round(sec % 60); return "~" + m + " min" + (m < 10 && r ? " " + r + " s" : ""); }
+    return "~" + Math.floor(sec / 3600) + " h " + Math.round((sec % 3600) / 60) + " min";
+  }
+  function loadSpeed() { try { const o = JSON.parse(localStorage.getItem("rog-speed")); if (o && typeof o.t === "number") return o; } catch (e) {} return null; }
+  let speed = loadSpeed();
+  const speedFresh = () => !!speed && Date.now() - speed.t < 6 * 3600 * 1000;
+  function netSpeed() {
+    if (speedFresh() && speed.down > 0) return { mbps: speed.down, src: "test" };
+    const c = navigator.connection;
+    if (c && c.downlink) return { mbps: c.downlink, src: "browser" };
+    return null;
+  }
+  function estLabel(g) {
+    const n = netSpeed();
+    if (!n || !g.sizeMB) return null;
+    return fmtTime(g.sizeMB * 8 / n.mbps * 1.15 + 1);          /* +15% for overhead, +1 s to start */
+  }
+  function estNote() {
+    const n = netSpeed();
+    if (!n) return "Run a speed test to see how long games take to load.";
+    return n.src === "test"
+      ? "Based on your last speed test. This is the first load; your browser keeps files for later visits."
+      : "A rough guess from your browser's connection info. Run a speed test for a better estimate.";
+  }
+  function metaText(g) {
+    const parts = [];
+    if (g.sizeMB) parts.push(fmtSize(g.sizeMB));
+    if (g.mins) parts.push("about " + fmtPlay(g.mins) + " of play");
+    const e = estLabel(g);
+    if (e) parts.push("loads in " + e);
+    return parts.join(", ");
+  }
+  const Fav = (() => {
+    let set = new Set();
+    try { set = new Set(JSON.parse(localStorage.getItem("rog-favs") || "[]")); } catch (e) {}
+    const key = (g) => g.id || g.title;
+    const save = () => { try { localStorage.setItem("rog-favs", JSON.stringify([...set])); } catch (e) {} };
+    return {
+      has: (g) => set.has(key(g)),
+      toggle(g) { set.has(key(g)) ? set.delete(key(g)) : set.add(key(g)); save(); return set.has(key(g)); },
+    };
+  })();
+  const playBucket = (g) => !g.mins ? null : g.mins <= 15 ? "quick" : g.mins <= 60 ? "medium" : "long";
+
   /* ---------- Build cards ---------- */
   games.forEach((g, i) => {
     const card = document.createElement("div");
@@ -1320,7 +1527,8 @@
     card.style.transitionDelay = `${i * 70}ms, 0ms, 0ms, 0ms`;
     card.innerHTML = `
       <div class="card-art">${g.image ? "" : g.emoji}</div>
-      <div class="card-text"><h3>${g.title}</h3><p><i class="dot ${g.url ? "on" : ""}"></i>${g.url ? "Ready to play" : "Coming soon"}</p><div class="tags">${(g.tags || []).map((t) => `<span>${t}</span>`).join("")}</div></div>
+      <div class="card-text"><h3>${g.title}</h3><p><i class="dot ${g.url ? "on" : ""}"></i>${g.url ? "Ready to play" : "Coming soon"}</p><div class="tags">${(g.styles || []).map((t) => `<span>${t}</span>`).join("")}</div><div class="meta">${g.mins ? `<span>${fmtPlay(g.mins)} play</span>` : ""}${g.sizeMB ? `<span>${fmtSize(g.sizeMB)}</span>` : ""}<span class="m-est" hidden></span></div></div>
+      <span class="fav-badge" hidden>★</span>
       <span class="go">▶</span>`;
     card.querySelector(".card-art").style.background = bg(g);
 
@@ -1369,6 +1577,9 @@
     $("mThumb").textContent = g.image ? "" : g.emoji;
     $("mTitle").textContent = g.title;
     $("mDesc").textContent = g.desc;
+    $("mMeta").textContent = metaText(g);
+    $("mMeta").hidden = !$("mMeta").textContent;
+    syncStars();
     overlay.classList.add("open");
   }
   function closeModal() { overlay.classList.remove("open"); setBg(-1); }
@@ -1436,7 +1647,7 @@
   const bpCards = games.map((g, i) => {
     const card = document.createElement("div");
     card.className = "bp-card";
-    card.innerHTML = `<div class="bp-art">${g.image ? "" : g.emoji}</div>`;
+    card.innerHTML = `<span class="bp-fav">★</span><div class="bp-art">${g.image ? "" : g.emoji}</div>`;
     card.querySelector(".bp-art").style.background = bg(g);
     card.addEventListener("click", () => {
       if (bpState !== "browse") return;
@@ -1469,6 +1680,8 @@
     const chip = $("bpChip");
     chip.textContent = g.url ? "Ready to play" : "Coming soon";
     chip.classList.toggle("ready", !!g.url);
+    const mt = $("bpMeta"); mt.textContent = metaText(g); mt.hidden = !mt.textContent;
+    syncStars();
     const info = $("bpInfo");
     info.classList.remove("swap"); void info.offsetWidth; info.classList.add("swap");
 
@@ -1487,7 +1700,8 @@
   function setFocus(f) {
     detailFocus = f;
     $("bpPlay").classList.toggle("focus", f === 0);
-    $("bpBack").classList.toggle("focus", f === 1);
+    $("bpStar").classList.toggle("focus", f === 1);
+    $("bpBack").classList.toggle("focus", f === 2);
   }
   function openDetails() {
     if (bpState !== "browse") return;
@@ -1499,6 +1713,8 @@
     const chip = $("bpDChip");
     chip.textContent = g.url ? "Ready to play" : "Coming soon";
     chip.classList.toggle("ready", !!g.url);
+    const dm = $("bpDMeta"); dm.textContent = metaText(g); dm.hidden = !dm.textContent;
+    syncStars();
     setFocus(0);
     setBpState("details");
     bpDetails.classList.add("open");
@@ -1517,8 +1733,11 @@
   $("bpPlay").addEventListener("click", playFromBp);
   $("bpBack").addEventListener("click", closeDetails);
   bpDetails.addEventListener("click", (e) => { if (e.target === bpDetails) closeDetails(); });
+  function bpToggleFav() { Fav.toggle(games[bpIndex]); Sound.click(); syncStars(); }
+  $("bpStar").addEventListener("click", bpToggleFav);
   $("bpPlay").addEventListener("mouseenter", () => { if (detailFocus !== 0) Sound.nav(); setFocus(0); });
-  $("bpBack").addEventListener("mouseenter", () => { if (detailFocus !== 1) Sound.nav(); setFocus(1); });
+  $("bpStar").addEventListener("mouseenter", () => { if (detailFocus !== 1) Sound.nav(); setFocus(1); });
+  $("bpBack").addEventListener("mouseenter", () => { if (detailFocus !== 2) Sound.nav(); setFocus(2); });
   $("bpPrev").addEventListener("click", () => bpMove(-1));
   $("bpNext").addEventListener("click", () => bpMove(1));
   [$("bpPrev"), $("bpNext"), $("bpExit"), $("bpMute")].forEach((b) =>
@@ -1623,13 +1842,15 @@
       else if (k === "home" && bpIndex !== 0) { Sound.tap(); selectGame(0); }
       else if (k === "end" && bpIndex !== games.length - 1) { Sound.tap(); selectGame(games.length - 1); }
       else if (ok) openDetails();
+      else if (k === "f") bpToggleFav();
       else if (back) exitBP(true);
       else return;
       e.preventDefault();
     } else if (bpState === "details") {
-      if (left || k === "w" || k === "arrowup") { if (detailFocus !== 0) { Sound.nav(); setFocus(0); } }
-      else if (right || k === "s" || k === "arrowdown") { if (detailFocus !== 1) { Sound.nav(); setFocus(1); } }
-      else if (ok) { detailFocus === 0 ? playFromBp() : closeDetails(); }
+      if (left || k === "w" || k === "arrowup") { if (detailFocus > 0) { Sound.nav(); setFocus(detailFocus - 1); } }
+      else if (right || k === "s" || k === "arrowdown") { if (detailFocus < 2) { Sound.nav(); setFocus(detailFocus + 1); } }
+      else if (ok) { [playFromBp, bpToggleFav, closeDetails][detailFocus](); }
+      else if (k === "f") bpToggleFav();
       else if (back) closeDetails();
       else return;
       e.preventDefault();
@@ -1642,6 +1863,11 @@
 
     if (e.target && e.target.id === "search") {          /* typing in the search box */
       if (k === "escape") { e.target.value = ""; applyFilter(); e.target.blur(); }
+      return;
+    }
+
+    if (stOverlay.classList.contains("open")) {       /* speed test panel */
+      if (k === "escape") { closeSpeed(); e.preventDefault(); }
       return;
     }
 
@@ -1662,6 +1888,7 @@
     if (!overlay.classList.contains("open")) {          /* shortcuts on the main page */
       if (k === "b") { enterBP(); e.preventDefault(); return; }
       if (k === "/") { $("search").focus(); e.preventDefault(); return; }
+      if (k === "t") { openSpeed(); e.preventDefault(); return; }
     }
     if (k === "escape" && overlay.classList.contains("open")) { Sound.back(); closeModal(); }
   });
@@ -1852,34 +2079,65 @@
   addEventListener("gamepaddisconnected", padLabel);
   padLabel();
 
-  /* Search + genre filters */
-  const searchEl = $("search"), chipsEl = $("chips"), gameCards = [...grid.children];
-  let activeTag = "All";
-  const allTags = ["All", ...new Set(games.flatMap((g) => g.tags || []))];
-  allTags.forEach((t) => {
+  /* Filters: style, playtime, status, sort + search */
+  const searchEl = $("search"), gameCards = [...grid.children];
+  const F = { styles: new Set(), play: new Set(), status: "all", sort: "default" };
+  const PLAY = [["quick", "Quick", "up to 15 min"], ["medium", "Medium", "15 to 60 min"], ["long", "Long", "1 hour or more"]];
+  const STATUS = [["all", "All games"], ["ready", "Playable now"], ["favs", "Starred"]];
+  const allStyles = [...new Set(games.flatMap((g) => g.styles || []))].sort();
+
+  function makeChip(host, label, sub, on, onClick) {
     const b = document.createElement("button");
-    b.className = "chip" + (t === "All" ? " on" : "");
-    b.textContent = t;
-    b.addEventListener("click", () => {
-      activeTag = t;
-      chipsEl.querySelectorAll(".chip").forEach((c) => c.classList.toggle("on", c === b));
-      Sound.click(); applyFilter();
-    });
+    b.className = "chip" + (on ? " on" : "");
+    b.innerHTML = label + (sub ? `<small>${sub}</small>` : "");
+    b.addEventListener("click", () => { Sound.click(); onClick(b); });
     b.addEventListener("mouseenter", () => Sound.hover());
-    chipsEl.appendChild(b);
+    host.appendChild(b);
+    return b;
+  }
+  const toggleIn = (set, v) => (set.has(v) ? set.delete(v) : set.add(v));
+  allStyles.forEach((st) => makeChip($("fStyles"), st, "", false, (b) => { toggleIn(F.styles, st); b.classList.toggle("on"); applyFilter(); }));
+  PLAY.forEach(([id, name, sub]) => makeChip($("fPlay"), name, sub, false, (b) => { toggleIn(F.play, id); b.classList.toggle("on"); applyFilter(); }));
+  STATUS.forEach(([id, name]) => makeChip($("fStatus"), name, "", id === "all", () => { F.status = id; applyFilter(); }));
+  $("fSort").addEventListener("change", (e) => { F.sort = e.target.value; Sound.click(); applyFilter(); });
+  $("fClear").addEventListener("click", () => {
+    Sound.click(); F.styles.clear(); F.play.clear(); F.status = "all"; F.sort = "default";
+    $("fSort").value = "default"; searchEl.value = ""; applyFilter();
   });
-  if (allTags.length < 3) chipsEl.hidden = true;        /* nothing worth filtering by */
+  $("filtBtn").addEventListener("click", () => {
+    const open = $("filters").classList.toggle("open");
+    $("filtBtn").setAttribute("aria-expanded", open); Sound.click();
+  });
+  $("libBtn").addEventListener("click", () => { F.status = F.status === "favs" ? "all" : "favs"; Sound.click(); applyFilter(); });
+  [$("filtBtn"), $("libBtn")].forEach((b) => b.addEventListener("mouseenter", () => Sound.hover()));
+
   function applyFilter() {
     const q = searchEl.value.trim().toLowerCase();
     let shown = 0;
-    games.forEach((g, i) => {
-      const hay = (g.title + " " + g.desc + " " + (g.tags || []).join(" ")).toLowerCase();
-      const ok = (!q || hay.includes(q)) && (activeTag === "All" || (g.tags || []).includes(activeTag));
-      gameCards[i].style.display = ok ? "" : "none";
-      if (ok) shown++;
+    const keep = games.map((g) => {
+      const hay = (g.title + " " + g.desc + " " + (g.styles || []).join(" ")).toLowerCase();
+      return (!q || hay.includes(q))
+        && (!F.styles.size || (g.styles || []).some((x) => F.styles.has(x)))
+        && (!F.play.size || F.play.has(playBucket(g)))
+        && (F.status === "all" || (F.status === "ready" && g.url) || (F.status === "favs" && Fav.has(g)));
     });
+    const key = {
+      default: (g, i) => i, az: (g) => g.title.toLowerCase(),
+      size: (g) => g.sizeMB || 1e9, short: (g) => g.mins || 1e9, long: (g) => -(g.mins || 0),
+    }[F.sort];
+    games.map((g, i) => i).sort((a, b) => { const x = key(games[a], a), y = key(games[b], b); return x < y ? -1 : x > y ? 1 : a - b; })
+      .forEach((idx, rank) => { gameCards[idx].style.order = rank; });
+    games.forEach((g, i) => { gameCards[i].style.display = keep[i] ? "" : "none"; if (keep[i]) shown++; });
+
+    $("fStatus").querySelectorAll(".chip").forEach((c, n) => c.classList.toggle("on", STATUS[n][0] === F.status));
+    $("libBtn").classList.toggle("on", F.status === "favs");
+    document.querySelector(".section-title").textContent = F.status === "favs" ? "Your library" : "All games";
+    const n = F.styles.size + F.play.size + (F.status !== "all" && F.status !== "favs" ? 1 : 0) + (F.sort !== "default" ? 1 : 0);
+    $("filtCount").textContent = n; $("filtCount").hidden = n === 0;
     $("noResults").hidden = shown > 0;
-    $("noResultsQ").textContent = q ? `"${searchEl.value.trim()}"` : activeTag;
+    $("noResultsMsg").textContent = F.status === "favs" && !q && !F.styles.size && !F.play.size
+      ? "Your library is empty. Open a game and press Star to add it here."
+      : "No games match these filters. Clear the search or the filters to see everything.";
   }
   searchEl.addEventListener("input", applyFilter);
 
@@ -1947,6 +2205,204 @@
       }
     })();
   })();
+
+
+  /* ============================================================
+     LIBRARY SYNC, LOAD-TIME ESTIMATES, SPEED TEST
+     ============================================================ */
+  function syncStars() {
+    const total = games.filter((g) => Fav.has(g)).length;
+    $("libCount").textContent = total; $("libCount").hidden = total === 0;
+    gameCards.forEach((c, i) => { const on = Fav.has(games[i]); c.classList.toggle("fav", on); c.querySelector(".fav-badge").hidden = !on; });
+    bpCards.forEach((c, i) => c.classList.toggle("fav", Fav.has(games[i])));
+    const setStar = (btn, g) => {
+      if (!btn || !g) return;
+      const on = Fav.has(g);
+      btn.textContent = on ? "★ Starred" : "☆ Star";
+      btn.classList.toggle("starred", on);
+    };
+    setStar($("mStar"), current); setStar($("bpStar"), games[bpIndex]);
+    if (F.status === "favs") applyFilter();
+  }
+  $("mStar").addEventListener("click", () => { if (!current) return; Fav.toggle(current); Sound.click(); syncStars(); });
+  $("mStar").addEventListener("mouseenter", () => Sound.hover());
+
+  function renderEstimates() {
+    gameCards.forEach((c, i) => {
+      const e = c.querySelector(".m-est"), l = estLabel(games[i]);
+      e.hidden = !l;
+      if (l) { e.textContent = "loads in " + l; e.title = estNote(); }
+    });
+    if (current && overlay.classList.contains("open")) { $("mMeta").textContent = metaText(current); $("mMeta").hidden = !$("mMeta").textContent; }
+    const mt = $("bpMeta"); mt.textContent = metaText(games[bpIndex]); mt.hidden = !mt.textContent;
+    const dm = $("bpDMeta"); dm.textContent = metaText(games[bpIndex]); dm.hidden = !dm.textContent;
+
+    const sized = games.filter((g) => g.sizeMB);
+    $("stEst").hidden = !sized.length;
+    $("stEstNote").textContent = estNote();
+    $("stEstList").innerHTML = sized.map((g) => `<div class="st-row"><span>${g.title} (${fmtSize(g.sizeMB)})</span><span>${estLabel(g) || "run a test"}</span></div>`).join("");
+  }
+  function pingRefresh() {
+    const hx = $("hexPing");
+    hx.hidden = !speedFresh();
+    if (!speedFresh()) return;
+    const p = Math.round(speed.ping), col = p < 40 ? "#4ade80" : p < 100 ? "#f5b94a" : "#ff5a5a";
+    $("pingVal").textContent = p;
+    hx.style.setProperty("--pc", col);
+    hx.title = `Ping ${p} ms, jitter ${Math.round(speed.jitter || 0)} ms (from your last speed test)`;
+  }
+
+  /* ----- Speed test ----- */
+  const stOverlay = $("stOverlay"), CF = "https://speed.cloudflare.com";
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  let stCtl = null, gTarget = 0, gShown = 0, gRaf = 0;
+  const gaugeP = (v) => Math.min(1, Math.log10(1 + v) / Math.log10(1001));
+
+  function gaugeLoop() {
+    gShown += (gTarget - gShown) * 0.18;
+    if (Math.abs(gTarget - gShown) < 0.05) gShown = gTarget;
+    $("gFill").style.strokeDashoffset = String(100 - gaugeP(gShown) * 100);
+    $("gNum").textContent = gShown >= 100 ? Math.round(gShown) : gShown.toFixed(gShown >= 10 ? 1 : 2);
+    gRaf = stOverlay.classList.contains("open") ? requestAnimationFrame(gaugeLoop) : 0;
+  }
+  function stPhase(name, tile) {
+    $("gPhase").textContent = name;
+    ["tDown", "tUp", "tPing", "tJit"].forEach((id) => $(id).classList.toggle("on", id === tile));
+  }
+  function stNote(text, err) { const n = $("stNote"); n.textContent = text; n.classList.toggle("err", !!err); }
+  const setTile = (id, v) => { $(id).querySelector("b").textContent = v; };
+
+  function openSpeed() {
+    stOverlay.classList.add("open"); Sound.open();
+    renderEstimates();
+    if (!gRaf) gRaf = requestAnimationFrame(gaugeLoop);
+    if (speedFresh() && !stCtl) {
+      setTile("tDown", speed.down.toFixed(1)); setTile("tUp", speed.up ? speed.up.toFixed(1) : "--");
+      setTile("tHex", Math.round(speed.ping)); $("tHex").querySelector("b").textContent = Math.round(speed.ping);
+      setTile("tJit", Math.round(speed.jitter || 0));
+      gTarget = speed.down; stPhase("Last result", "");
+      $("stGo").textContent = "Test again";
+    }
+  }
+  function closeSpeed() {
+    if (stCtl) stCtl.abort();
+    if (!stOverlay.classList.contains("open")) return;
+    stOverlay.classList.remove("open"); Sound.back();
+  }
+  $("heroSpeed").addEventListener("click", openSpeed);
+  $("heroSpeed").addEventListener("mouseenter", () => Sound.hover());
+  $("stClose").addEventListener("click", closeSpeed);
+  stOverlay.addEventListener("click", (e) => { if (e.target === stOverlay) closeSpeed(); });
+
+  async function measureDown(makeUrl, secs, streams, signal, onTick) {
+    let bytes = 0, warmBytes = 0, warmT = 0;
+    const t0 = performance.now(), stop = new AbortController();
+    const onAbort = () => stop.abort();
+    signal.addEventListener("abort", onAbort);
+    const timer = setTimeout(() => stop.abort(), secs * 1000);
+    const tick = setInterval(() => {
+      const t = (performance.now() - t0) / 1000;
+      if (t >= 1 && !warmT) { warmT = t; warmBytes = bytes; }
+      onTick(warmT && t > warmT ? (bytes - warmBytes) * 8 / 1e6 / (t - warmT) : bytes * 8 / 1e6 / Math.max(t, 0.25));
+    }, 150);
+    const worker = async () => {
+      while (!stop.signal.aborted) {
+        try {
+          const r = await fetch(makeUrl(), { cache: "no-store", signal: stop.signal });
+          if (!r.ok || !r.body) throw new Error("bad response");
+          const rd = r.body.getReader();
+          for (;;) { const { done, value } = await rd.read(); if (done) break; bytes += value.length; }
+        } catch (e) { if (stop.signal.aborted) return; throw e; }
+      }
+    };
+    try { await Promise.all(Array.from({ length: streams }, worker)); }
+    finally { clearTimeout(timer); clearInterval(tick); signal.removeEventListener("abort", onAbort); stop.abort(); }
+    if (signal.aborted) throw new DOMException("Aborted", "AbortError");
+    const t = (performance.now() - t0) / 1000;
+    return warmT && t > warmT ? (bytes - warmBytes) * 8 / 1e6 / (t - warmT) : bytes * 8 / 1e6 / t;
+  }
+  async function measureUp(url, secs, streams, signal, onTick) {
+    const chunk = new Blob([crypto.getRandomValues(new Uint8Array(65536)), new Uint8Array(196608)]);   /* 256 KB */
+    let bytes = 0;
+    const t0 = performance.now(), stop = new AbortController();
+    const onAbort = () => stop.abort();
+    signal.addEventListener("abort", onAbort);
+    const timer = setTimeout(() => stop.abort(), secs * 1000);
+    const tick = setInterval(() => onTick(bytes * 8 / 1e6 / Math.max((performance.now() - t0) / 1000, 0.5)), 150);
+    const worker = async () => {
+      while (!stop.signal.aborted) {
+        try {
+          const r = await fetch(url + "?_=" + Math.random(), { method: "POST", body: chunk, cache: "no-store", signal: stop.signal });
+          await r.arrayBuffer(); bytes += chunk.size;
+        } catch (e) { if (stop.signal.aborted) return; throw e; }
+      }
+    };
+    try { await Promise.all(Array.from({ length: streams }, worker)); }
+    finally { clearTimeout(timer); clearInterval(tick); signal.removeEventListener("abort", onAbort); stop.abort(); }
+    if (signal.aborted) throw new DOMException("Aborted", "AbortError");
+    return bytes * 8 / 1e6 / ((performance.now() - t0) / 1000);
+  }
+
+  async function runSpeedTest() {
+    if (stCtl) { stCtl.abort(); return; }                         /* the button doubles as Stop */
+    const ctl = new AbortController(); stCtl = ctl;
+    const sig = ctl.signal, r = { down: 0, up: 0, ping: 0, jitter: 0 };
+    let fallback = false;
+    $("stGo").textContent = "Stop";
+    ["tDown", "tUp", "tJit"].forEach((id) => setTile(id, "--")); $("tHex").querySelector("b").textContent = "--";
+    gTarget = 0; gShown = 0; stNote("Testing your connection. This takes about 20 seconds.", false);
+    try {
+      /* 1. ping + jitter */
+      stPhase("Ping", "tPing");
+      const rtts = [];
+      const pingOnce = async (url, init) => { const t = performance.now(); const res = await fetch(url, { cache: "no-store", signal: sig, ...init }); await res.arrayBuffer(); return performance.now() - t; };
+      try { for (let i = 0; i < 9; i++) { rtts.push(await pingOnce(`${CF}/__down?bytes=0&_=${Math.random()}`)); await sleep(60); } }
+      catch (e) {
+        if (sig.aborted) throw e;
+        fallback = true; rtts.length = 0;
+        for (let i = 0; i < 9; i++) { rtts.push(await pingOnce(`${location.pathname}?_=${Math.random()}`, { method: "HEAD" })); await sleep(60); }
+      }
+      rtts.shift();                                              /* the first one includes connection setup */
+      const sorted = [...rtts].sort((a, b) => a - b);
+      r.ping = sorted[Math.floor(sorted.length / 2)];
+      r.jitter = rtts.slice(1).reduce((s, v, i) => s + Math.abs(v - rtts[i]), 0) / Math.max(1, rtts.length - 1);
+      $("tHex").querySelector("b").textContent = Math.round(r.ping); setTile("tJit", Math.round(r.jitter));
+
+      /* 2. download */
+      stPhase("Download", "tDown");
+      const own = ["sounds/SteamOSBoot.mp3", "sounds/SteamOSShowUI.mp3", "sounds/SteamOSDeatils.mp3", "sounds/SteamOSLaunchGame.mp3"];
+      let k = 0;
+      const dUrl = fallback ? () => `${own[k++ % own.length]}?_=${Math.random()}` : () => `${CF}/__down?bytes=25000000&_=${Math.random()}`;
+      r.down = await measureDown(dUrl, 8, fallback ? 4 : 3, sig, (v) => { gTarget = v; });
+      gTarget = r.down; setTile("tDown", r.down.toFixed(1));
+
+      /* 3. upload */
+      if (!fallback) {
+        stPhase("Upload", "tUp");
+        gTarget = 0; await sleep(300);
+        r.up = await measureUp(`${CF}/__up`, 6, 2, sig, (v) => { gTarget = v; });
+        gTarget = r.up; setTile("tUp", r.up.toFixed(1));
+      }
+
+      speed = { ...r, t: Date.now() };
+      try { localStorage.setItem("rog-speed", JSON.stringify(speed)); } catch (e) {}
+      gTarget = r.down; stPhase("Done", "");
+      stNote(fallback
+        ? "Couldn't reach the test server, so this is a rough check against this site. Upload wasn't measured."
+        : "Done. The load times below use your download speed.", fallback);
+      Sound.launch();
+      pingRefresh(); renderEstimates(); gameCards.length && 0;
+    } catch (e) {
+      if (sig.aborted) { stPhase("Stopped", ""); stNote("Test stopped.", false); }
+      else { stPhase("Failed", ""); stNote("The test couldn't finish. Check your connection and try again.", true); }
+    } finally {
+      stCtl = null; $("stGo").textContent = "Test again";
+    }
+  }
+  $("stGo").addEventListener("click", () => { Sound.click(); runSpeedTest(); });
+
+  syncStars(); applyFilter(); renderEstimates(); pingRefresh();
+  window.addEventListener("online", renderEstimates);
 
   $("year").textContent = new Date().getFullYear();
 </script>
