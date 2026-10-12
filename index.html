@@ -1315,11 +1315,7 @@
             Leave it empty ("") to keep it as a placeholder.
      ============================================================ */
   const games = [
-    { title: "Neon Snake",   desc: "Classic snake with a neon glow. Eat, grow, speed up, and try not to bite yourself. Arrow keys, WASD or swipe.", emoji: "🐍", colors: ["#00e5ff", "#0a4a6a"], image: "", styles: ["Arcade", "Classic"], mins: 5, sizeMB: 0.01, url: "games/neon-snake.html" },
-    { title: "Void Dodger",  desc: "Pilot a tiny ship through a rain of rocks that gets faster the longer you live. How long can you last?", emoji: "🚀", colors: ["#7c5cff", "#2a1a7e"], image: "", styles: ["Arcade", "Skill"], mins: 5, sizeMB: 0.01, url: "games/void-dodger.html" },
-    { title: "Brick Breaker", desc: "Bounce the ball, smash every brick, clear levels. Mouse, touch or arrow keys. Aim your shots with the paddle edge.", emoji: "🧱", colors: ["#ff5c8a", "#7e1f45"], image: "", styles: ["Arcade", "Skill"], mins: 10, sizeMB: 0.01, url: "games/brick-breaker.html" },
-    { title: "Memory Flip",  desc: "Flip cards and find all eight matching pairs in as few moves as you can. A relaxed brain-teaser.", emoji: "🧠", colors: ["#4ade80", "#14693a"], image: "", styles: ["Puzzle", "Casual"], mins: 3, sizeMB: 0.01, url: "games/memory-flip.html" },
-    { title: "Open Golf", desc: "Open-source 3D mini golf by Michael Gerdes (MIT licence). Opens the author's own web version in a new tab; works best in Chrome.", emoji: "⛳", colors: ["#22c55e", "#14532d"], image: "", styles: ["Sports", "Casual"], mins: 20, sizeMB: 20, url: "https://mgerdes.github.io/minigolf.html", newTab: true },,
+    { title: "Open Golf", desc: "Open-source 3D mini golf by Michael Gerdes (MIT licence). Opens the author's own web version in a new tab; works best in Chrome.", emoji: "⛳", colors: ["#22c55e", "#14532d"], image: "", styles: ["Sports", "Casual"], mins: 20, sizeMB: 20, url: "https://mgerdes.github.io/minigolf.html", newTab: true },
 
     { title: "Plague Inc: Evolved", desc: "Strategy and simulation: evolve a pathogen and adapt to a changing world.", emoji: "🦠", colors: ["#a7d129", "#174a36"], image: "", styles: ["Strategy", "Simulation"], mins: 30, url: "https://kosmaki.github.io/ROG-Games-2/", newTab: true },
     { title: "Space Waves", desc: "Navigate tight space corridors and test your timing in this arcade-style challenge.", emoji: "🌌", colors: ["#18c8ff", "#3d1a8a"], image: "", styles: ["Arcade", "Skill"], mins: 5, url: "https://kosmaki.github.io/ROG-Games-2/", newTab: true },
@@ -1555,6 +1551,9 @@
   games.forEach((g, i) => {
     const card = document.createElement("div");
     card.className = "card";
+    card.setAttribute("role", "button");
+    card.tabIndex = 0;
+    card.setAttribute("aria-label", "Open " + g.title + " details");
     card.style.transitionDelay = `${i * 70}ms, 0ms, 0ms, 0ms`;
     card.innerHTML = `
       <div class="card-art">${g.image ? "" : g.emoji}</div>
@@ -1564,6 +1563,7 @@
     card.querySelector(".card-art").style.background = bg(g);
 
     card.addEventListener("click", () => { Sound.open(); openModal(g, i); });
+    card.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); Sound.open(); openModal(g, i); } });
     card.addEventListener("mouseenter", () => { setBg(i); Sound.hover(); });
     card.addEventListener("mouseleave", () => {
       if (!overlay.classList.contains("open")) setBg(-1);
@@ -1604,7 +1604,7 @@
   function openModal(g, i) {
     current = g;
     setBg(i);                            /* also covers touch screens (no hover) */
-    $("mThumb").style.background = bg(g);
+    $("mThumb").style.background = bg(g, true);
     $("mThumb").textContent = g.image ? "" : g.emoji;
     $("mTitle").textContent = g.title;
     $("mDesc").textContent = g.desc;
@@ -1684,8 +1684,11 @@
   const bpCards = games.map((g, i) => {
     const card = document.createElement("div");
     card.className = "bp-card";
+    card.setAttribute("role", "button");
+    card.tabIndex = 0;
     card.innerHTML = `<span class="bp-fav">★</span><div class="bp-art">${g.image ? "" : g.emoji}</div>`;
     card.querySelector(".bp-art").style.background = bg(g);
+    card.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); card.click(); } });
     card.addEventListener("click", () => {
       if (bpState !== "browse") return;
       if (i === bpIndex) openDetails();
@@ -1743,7 +1746,7 @@
   function openDetails() {
     if (bpState !== "browse") return;
     const g = games[bpIndex];
-    $("bpDArt").style.background = bg(g);
+    $("bpDArt").style.background = bg(g, true);
     $("bpDArt").textContent = g.image ? "" : g.emoji;
     $("bpDTitle").textContent = g.title;
     $("bpDDesc").textContent = g.desc;
