@@ -2094,8 +2094,38 @@
   $("bpExit").addEventListener("click", () => exitBP(true));
   bpBoot.addEventListener("click", finishBoot);
 
+  /* Hold Escape to close the player, so games can still use a quick Escape press. */
+  let escHoldTimer = null;
+  let escHoldTriggered = false;
+  const ESC_HOLD_MS = 900;
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || e.repeat || !player.classList.contains("open")) return;
+    escHoldTriggered = false;
+    clearTimeout(escHoldTimer);
+    escHoldTimer = setTimeout(() => {
+      escHoldTriggered = true;
+      Sound.back();
+      exitPlayer();
+    }, ESC_HOLD_MS);
+  }, true);
+  document.addEventListener("keyup", (e) => {
+    if (e.key !== "Escape") return;
+    clearTimeout(escHoldTimer);
+    escHoldTimer = null;
+    if (escHoldTriggered) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      escHoldTriggered = false;
+    }
+  }, true);
+
   /* Holding Esc (or the browser's own exit) leaves fullscreen -> leave Big Picture too */
   document.addEventListener("fullscreenchange", () => {
+    if (player.classList.contains("open") && document.fullscreenElement) {
+      try { navigator.keyboard && navigator.keyboard.lock && navigator.keyboard.lock(["Escape"]).catch(() => {}); } catch (e) {}
+    } else if (!document.fullscreenElement) {
+      try { navigator.keyboard && navigator.keyboard.unlock && navigator.keyboard.unlock(); } catch (e) {}
+    }
     if (document.fullscreenElement || bpState === "closed" || player.classList.contains("open")) return;
     if (bpState === "details") closeDetails();       /* Esc in the details menu just goes Back */
     else exitBP(false);
