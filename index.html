@@ -1619,13 +1619,107 @@
       ? "Based on your last speed test. This is the first load; your browser keeps files for later visits."
       : "A rough guess from your browser's connection info. Run a speed test for a better estimate.";
   }
+  /* ---------- Per-browser playtime tracking ---------- */
+  const PLAYTIME_KEY = "rog-playtime-v1";
+  let playtimeTotals = {};
+  try {
+    const savedPlaytime = JSON.parse(localStorage.getItem(PLAYTIME_KEY) || "{}");
+    if (savedPlaytime && typeof savedPlaytime === "object" && !Array.isArray(savedPlaytime)) playtimeTotals = savedPlaytime;
+  } catch (e) {}
+  const playKey = (g) => g.id || g.title;
+  let activePlayGame = null;
+  let playStartedAt = 0;
+  let playSaveTimer = 0;
+
+  function playSeconds(g) {
+    const n = Number(playtimeTotals[playKey(g)]);
+    return Number.isFinite(n) && n > 0 ? n : 0;
+  }
+  function fmtActualPlaytime(seconds) {
+    const totalMinutes = Math.floor(Math.max(0, seconds) / 60);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    if (hours && minutes) return hours + (hours === 1 ? " Hour " : " Hours ") + minutes + (minutes === 1 ? " Minute" : " Minutes");
+    if (hours) return hours + (hours === 1 ? " Hour" : " Hours");
+    return totalMinutes + (totalMinutes === 1 ? " Minute" : " Minutes");
+  }
+  function persistPlaytime() {
+    if (activePlayGame && playStartedAt && !document.hidden) {
+      const elapsed = Math.max(0, (Date.now() - playStartedAt) / 1000);
+      playtimeTotals[playKey(activePlayGame)] = playSeconds(activePlayGame) + elapsed;
+      playStartedAt = Date.now();
+    }
+    try { localStorage.setItem(PLAYTIME_KEY, JSON.stringify(playtimeTotals)); } catch (e) {}
+    refreshPlaytimeUI();
+  }
+  function startPlaytime(g) {
+    stopPlaytime();
+    if (!g || !g.url) return;
+    activePlayGame = g;
+    playStartedAt = document.hidden ? 0 : Date.now();
+    playSaveTimer = window.setInterval(persistPlaytime, 5000);
+    refreshPlaytimeUI();
+  }
+  function stopPlaytime() {
+    if (playSaveTimer) window.clearInterval(playSaveTimer);
+    playSaveTimer = 0;
+    if (activePlayGame && playStartedAt) {
+      const g = activePlayGame;
+      playtimeTotals[playKey(g)] = playSeconds(g) + Math.max(0, (Date.now() - playStartedAt) / 1000);
+      try { localStorage.setItem(PLAYTIME_KEY, JSON.stringify(playtimeTotals)); } catch (e) {}
+    }
+    activePlayGame = null;
+    playStartedAt = 0;
+    refreshPlaytimeUI();
+  }
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      if (activePlayGame && playStartedAt) {
+        const g = activePlayGame;
+        playtimeTotals[playKey(g)] = playSeconds(g) + Math.max(0, (Date.now() - playStartedAt) / 1000);
+        playStartedAt = 0;
+        try { localStorage.setItem(PLAYTIME_KEY, JSON.stringify(playtimeTotals)); } catch (e) {}
+      }
+    } else if (activePlayGame) {
+      playStartedAt = Date.now();
+    }
+    refreshPlaytimeUI();
+  });
+  window.addEventListener("pagehide", () => {
+    if (activePlayGame && playStartedAt && !document.hidden) {
+      const g = activePlayGame;
+      playtimeTotals[playKey(g)] = playSeconds(g) + Math.max(0, (Date.now() - playStartedAt) / 1000);
+      playStartedAt = 0;
+      try { localStorage.setItem(PLAYTIME_KEY, JSON.stringify(playtimeTotals)); } catch (e) {}
+    }
+  });
+
   function metaText(g) {
-    const parts = [];
+    const parts = ["Played " + fmtActualPlaytime(playSeconds(g))];
     if (g.sizeMB) parts.push(fmtSize(g.sizeMB));
-    if (g.mins) parts.push("about " + fmtPlay(g.mins) + " of play");
     const e = estLabel(g);
     if (e) parts.push("loads in " + e);
     return parts.join(", ");
+  }
+  function refreshPlaytimeUI() {
+    games.forEach((g, i) => {
+      const card = gameCards && gameCards[i];
+      if (card) {
+        const value = card.querySelector(".playtime-value");
+        if (value) value.textContent = fmtActualPlaytime(playSeconds(g)) + " played";
+      }
+    });
+    if (current && overlay.classList.contains("open")) {
+      $("mMeta").textContent = metaText(current);
+      $("mMeta").hidden = !$("mMeta").textContent;
+    }
+    if (typeof bpIndex !== "undefined" && bpState !== "closed") {
+      const g = games[bpIndex];
+      const mt = $("bpMeta");
+      if (mt) { mt.textContent = metaText(g); mt.hidden = !mt.textContent; }
+      const dm = $("bpDMeta");
+      if (dm && bpState === "details") { dm.textContent = metaText(g); dm.hidden = !dm.textContent; }
+    }
   }
   const Fav = (() => {
     let set = new Set();
@@ -1650,7 +1744,7 @@
     card.style.transitionDelay = `${i * 70}ms, 0ms, 0ms, 0ms`;
     card.innerHTML = `
       <div class="card-art">${g.image ? "" : g.emoji}</div>
-      <div class="card-text"><h3>${g.title}</h3><p><i class="dot ${g.url ? "on" : ""}"></i>${g.url ? "Ready to play" : "Coming soon"}</p><div class="tags">${(g.styles || []).map((t) => `<span>${t}</span>`).join("")}</div><div class="meta">${g.mins ? `<span>${fmtPlay(g.mins)} play</span>` : ""}${g.sizeMB ? `<span>${fmtSize(g.sizeMB)}</span>` : ""}<span class="m-est" hidden></span></div></div>
+      <div class="card-text"><h3>${g.title}</h3><p><i class="dot ${g.url ? "on" : ""}"></i>${g.url ? "Ready to play" : "Coming soon"}</p><div class="tags">${(g.styles || []).map((t) => `<span>${t}</span>`).join("")}</div><div class="meta"><span class="playtime-value">${fmtActualPlaytime(playSeconds(g))} played</span>${g.sizeMB ? `<span>${fmtSize(g.sizeMB)}</span>` : ""}<span class="m-est" hidden></span></div></div>
       <span class="fav-badge" hidden>★</span>
       <span class="go">▶</span>`;
     card.querySelector(".card-art").style.background = bg(g);
@@ -1724,6 +1818,8 @@
 
   /* ---------- Player (shared by normal mode and Big Picture) ---------- */
   function launchGame(g) {
+    stopPlaytime();
+    startPlaytime(g);
     $("pTitle").textContent = g.title;
     if (g.url) {
       /* Keep the game on this site in a framed player; allow games to request fullscreen. */
@@ -1753,6 +1849,7 @@
   });
 
   function exitPlayer() {
+    stopPlaytime();
     /* In Big Picture the whole page is fullscreen already, so stay in it */
     if (document.fullscreenElement && bpState === "closed") document.exitFullscreen();
     player.classList.remove("open");
@@ -2273,7 +2370,7 @@
     });
     const key = {
       default: (g, i) => i, az: (g) => g.title.toLowerCase(),
-      size: (g) => g.sizeMB || 1e9, short: (g) => g.mins || 1e9, long: (g) => -(g.mins || 0),
+      size: (g) => g.sizeMB || 1e9, short: (g) => playSeconds(g), long: (g) => -playSeconds(g),
     }[F.sort];
     games.map((g, i) => i).sort((a, b) => { const x = key(games[a], a), y = key(games[b], b); return x < y ? -1 : x > y ? 1 : a - b; })
       .forEach((idx, rank) => { gameCards[idx].style.order = rank; });
