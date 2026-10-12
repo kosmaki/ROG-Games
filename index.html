@@ -1189,8 +1189,6 @@
           <option value="default">Default order</option>
           <option value="az">Name, A to Z</option>
           <option value="za">Name, Z to A</option>
-          <option value="size">Smallest download first</option>
-          <option value="large">Largest download first</option>
           <option value="short">Shortest playtime first</option>
           <option value="long">Longest playtime first</option>
         </select>
@@ -1743,8 +1741,6 @@
   function metaText(g) {
     const parts = ["Played " + fmtActualPlaytime(playSeconds(g))];
     if (g.sizeMB) parts.push(fmtSize(g.sizeMB));
-    const e = estLabel(g);
-    if (e) parts.push("loads in " + e);
     return parts.join(", ");
   }
   function refreshPlaytimeUI() {
@@ -2453,8 +2449,8 @@
     });
     const key = {
       default: (g, i) => i, az: (g) => g.title.toLowerCase(),
-      za: (g) => g.title.toLowerCase(), size: (g) => g.sizeMB || 1e9,
-      large: (g) => -(g.sizeMB || 0), short: (g) => playSeconds(g), long: (g) => -playSeconds(g),
+      za: (g) => g.title.toLowerCase(),
+      short: (g) => playSeconds(g), long: (g) => -playSeconds(g),
     }[F.sort];
     games.map((g, i) => i) .sort((a, b) => {
         const x = key(games[a], a), y = key(games[b], b);
@@ -2563,16 +2559,15 @@
   $("mStar").addEventListener("mouseenter", () => Sound.hover());
 
   function renderEstimates() {
-    gameCards.forEach((c, i) => {
-      const e = c.querySelector(".m-est"), l = estLabel(games[i]);
-      e.hidden = !l;
-      if (l) { e.textContent = "loads in " + l; e.title = estNote(); }
+    gameCards.forEach((c) => {
+      const e = c.querySelector(".m-est");
+      if (e) { e.hidden = true; e.textContent = ""; e.removeAttribute("title"); }
     });
     if (current && overlay.classList.contains("open")) { $("mMeta").textContent = metaText(current); $("mMeta").hidden = !$("mMeta").textContent; }
     const mt = $("bpMeta"); mt.textContent = metaText(games[bpIndex]); mt.hidden = !mt.textContent;
     const dm = $("bpDMeta"); dm.textContent = metaText(games[bpIndex]); dm.hidden = !dm.textContent;
 
-    const sized = games.filter((g) => g.sizeMB);
+    const sized = games.filter((g) => g.sizeMB && !/open golf/i.test(g.title));
     $("stEst").hidden = !sized.length;
     $("stEstNote").textContent = estNote();
     $("stEstList").innerHTML = sized.map((g) => `<div class="st-row"><span>${g.title} (${fmtSize(g.sizeMB)})</span><span>${estLabel(g) || "run a test"}</span></div>`).join("");
