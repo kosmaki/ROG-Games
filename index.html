@@ -426,7 +426,7 @@
     display: flex; flex-direction: column;
     border: 1px solid rgba(255,255,255,.16);
     border-radius: 20px; overflow: hidden;
-    box-shadow: 0 0 0 100vmax rgba(3, 4, 10, .82), 0 24px 100px rgba(0,0,0,.65);
+    box-shadow: 0 24px 100px rgba(0,0,0,.45);
     transform: translateY(110%) scale(.98);
     transition: transform .6s var(--ease);
   }
@@ -1557,8 +1557,8 @@
     g.fallbackImage = coverArt(g, false);
     g.fallbackHeroImage = coverArt(g, true);
     const appId = STEAM_APP_IDS[g.title];
-    g.image = appId ? `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/library_600x900.jpg` : g.fallbackImage;
-    g.heroImage = appId ? `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/header.jpg` : g.fallbackHeroImage;
+    g.image = appId && g.title !== "Granny" ? `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/library_600x900.jpg` : g.fallbackImage;
+    g.heroImage = appId && g.title !== "Granny" ? `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/header.jpg` : g.fallbackHeroImage;
   });
 
   const gradient = (g) => `linear-gradient(135deg, ${g.colors[0]}, ${g.colors[1]})`;
