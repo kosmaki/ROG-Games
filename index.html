@@ -385,6 +385,9 @@
   .modal-body { padding: 26px 28px 30px; }
   .modal-body h2 { font-size: 1.6rem; margin-bottom: 8px; }
   .modal-body p { color: var(--muted); line-height: 1.55; margin-bottom: 24px; }
+  .source-link { display: inline-block; color: var(--accent-2); text-decoration: underline; text-underline-offset: 3px; font-size: .9rem; margin: 0 0 18px; }
+  .source-link:hover { color: var(--text); }
+  .source-link[hidden] { display: none; }
   .actions { display: flex; gap: 12px; }
 
   button {
@@ -1214,6 +1217,7 @@
       <h2 id="mTitle"></h2>
       <p id="mDesc"></p>
       <p class="m-meta" id="mMeta"></p>
+      <a class="source-link" id="mSource" href="#">View game file on GitHub</a>
       <div class="actions">
         <button class="play" id="playBtn">▶ Play</button>
         <button class="ghost" id="mStar">☆ Star</button>
@@ -1276,6 +1280,7 @@
         <h2 id="bpDTitle"></h2>
         <p id="bpDDesc"></p>
         <div class="bp-meta-row" style="justify-content:flex-start"><span class="bp-chip" id="bpDChip"></span><span class="bp-chip" id="bpDMeta" hidden></span></div>
+        <a class="source-link" id="bpDSource" href="#">View game file on GitHub</a>
         <div class="bp-dactions">
           <button class="bp-play focus" id="bpPlay">▶ Play</button>
           <button id="bpStar">☆ Star</button>
@@ -1326,26 +1331,26 @@
             Leave it empty ("") to keep it as a placeholder.
      ============================================================ */
   const games = [
-    { title: "Open Golf", desc: "Open-source 3D mini golf by Michael Gerdes (MIT licence). Opens the author's own web version in a new tab; works best in Chrome.", emoji: "⛳", colors: ["#22c55e", "#14532d"], image: "", styles: ["Sports", "Casual"], mins: 20, sizeMB: 20, url: "https://mgerdes.github.io/minigolf.html" },
+    { title: "Open Golf", desc: "Open-source 3D mini golf by Michael Gerdes (MIT licence). Opens the author's own web version in this tab; works best in Chrome.", emoji: "⛳", colors: ["#22c55e", "#14532d"], image: "", styles: ["Sports", "Casual"], mins: 20, sizeMB: 20, url: "https://mgerdes.github.io/minigolf.html", source: "https://github.com/mgerdes/mgerdes.github.io/blob/master/minigolf.html" },
 
-    { title: "Plague Inc: Evolved", desc: "Strategy and simulation: evolve a pathogen and adapt to a changing world.", emoji: "🦠", colors: ["#a7d129", "#174a36"], image: "", styles: ["Strategy", "Simulation"], mins: 30, url: "https://kosmaki.github.io/ROG-Games/games/PlagueIncEvolved-main/PlagueIncEvolved-main/index.html" },
-    { title: "Space Waves", desc: "Navigate tight space corridors and test your timing in this arcade-style challenge.", emoji: "🌌", colors: ["#18c8ff", "#3d1a8a"], image: "", styles: ["Arcade", "Skill"], mins: 5, url: "https://kosmaki.github.io/ROG-Games/games/Space%2520Waves/Space%2520Waves/index.html" },
-    { title: "Plants vs. Zombies Portable", desc: "A garden-defense strategy game: place plants and defend against waves of zombies.", emoji: "🌻", colors: ["#69c34a", "#28572d"], image: "", styles: ["Strategy", "Tower Defense"], mins: 20, url: "https://kosmaki.github.io/ROG-Games/games/pvz-portable-wasm/pvz-portable.html" },
-    { title: "Bottle Flip 3D", desc: "Flip a bottle across platforms and land cleanly to keep moving.", emoji: "🍾", colors: ["#ffb347", "#d94d66"], image: "", styles: ["Arcade", "Skill"], mins: 5, url: "https://kosmaki.github.io/ROG-Games-2/games/Bottle203D/Bottle%2520Flip%25203D/index.html" },
-    { title: "Five Nights at Freddy's", desc: "Survive a tense night-shift horror challenge and manage your limited resources.", emoji: "🐻", colors: ["#6c3434", "#171323"], image: "", styles: ["Horror", "Survival"], mins: 10, url: "https://kosmaki.github.io/ROG-Games-2/games/fnaf/fnaf/index.html" },
-    { title: "Granny", desc: "A stealth horror escape challenge where careful movement and listening matter.", emoji: "🏚️", colors: ["#6e7d58", "#242a22"], image: "", styles: ["Horror", "Stealth"], mins: 10, url: "https://kosmaki.github.io/ROG-Games-2/games/granny-main/granny-main/index.html" },
-    { title: "Terraria", desc: "Explore, craft, build and battle in a sprawling sandbox adventure.", emoji: "⛏️", colors: ["#4aa7e8", "#244b39"], image: "", styles: ["Adventure", "Sandbox"], mins: 45, url: "https://kosmaki.github.io/ROG-Games-2/games/terraria-wasm-build/index.html" },
+    { title: "Plague Inc: Evolved", desc: "Strategy and simulation: evolve a pathogen and adapt to a changing world.", emoji: "🦠", colors: ["#a7d129", "#174a36"], image: "", styles: ["Strategy", "Simulation"], mins: 30, url: "https://kosmaki.github.io/ROG-Games/games/PlagueIncEvolved-main/PlagueIncEvolved-main/index.html", source: "https://github.com/kosmaki/ROG-Games/blob/main/games/PlagueIncEvolved-main/PlagueIncEvolved-main/index.html" },
+    { title: "Space Waves", desc: "Navigate tight space corridors and test your timing in this arcade-style challenge.", emoji: "🌌", colors: ["#18c8ff", "#3d1a8a"], image: "", styles: ["Arcade", "Skill"], mins: 5, url: "https://kosmaki.github.io/ROG-Games/games/Space%2520Waves/Space%2520Waves/index.html", source: "https://github.com/kosmaki/ROG-Games/blob/main/games/Space%2520Waves/Space%2520Waves/index.html" },
+    { title: "Plants vs. Zombies Portable", desc: "A garden-defense strategy game: place plants and defend against waves of zombies.", emoji: "🌻", colors: ["#69c34a", "#28572d"], image: "", styles: ["Strategy", "Tower Defense"], mins: 20, url: "https://kosmaki.github.io/ROG-Games/games/pvz-portable-wasm/pvz-portable.html", source: "https://github.com/kosmaki/ROG-Games/blob/main/games/pvz-portable-wasm/pvz-portable.html" },
+    { title: "Bottle Flip 3D", desc: "Flip a bottle across platforms and land cleanly to keep moving.", emoji: "🍾", colors: ["#ffb347", "#d94d66"], image: "", styles: ["Arcade", "Skill"], mins: 5, url: "https://kosmaki.github.io/ROG-Games-2/games/Bottle203D/Bottle%2520Flip%25203D/index.html", source: "https://github.com/kosmaki/ROG-Games-2/blob/main/games/Bottle203D/Bottle%2520Flip%25203D/index.html" },
+    { title: "Five Nights at Freddy's", desc: "Survive a tense night-shift horror challenge and manage your limited resources.", emoji: "🐻", colors: ["#6c3434", "#171323"], image: "", styles: ["Horror", "Survival"], mins: 10, url: "https://kosmaki.github.io/ROG-Games-2/games/fnaf/fnaf/index.html", source: "https://github.com/kosmaki/ROG-Games-2/blob/main/games/fnaf/fnaf/index.html" },
+    { title: "Granny", desc: "A stealth horror escape challenge where careful movement and listening matter.", emoji: "🏚️", colors: ["#6e7d58", "#242a22"], image: "", styles: ["Horror", "Stealth"], mins: 10, url: "https://kosmaki.github.io/ROG-Games-2/games/granny-main/granny-main/index.html", source: "https://github.com/kosmaki/ROG-Games-2/blob/main/games/granny-main/granny-main/index.html" },
+    { title: "Terraria", desc: "Explore, craft, build and battle in a sprawling sandbox adventure.", emoji: "⛏️", colors: ["#4aa7e8", "#244b39"], image: "", styles: ["Adventure", "Sandbox"], mins: 45, url: "https://kosmaki.github.io/ROG-Games-2/games/terraria-wasm-build/index.html", source: "https://github.com/kosmaki/ROG-Games-2/blob/main/games/terraria-wasm-build/index.html" },
     { title: "Global Strike", desc: "This game entry is currently unavailable.", emoji: "🎯", colors: ["#e45c3a", "#302b42"], image: "", styles: ["Action", "Shooter"], mins: 15, url: "" },
-    { title: "Stardew Valley", desc: "Build a farm, grow crops, meet neighbors and explore at your own pace.", emoji: "🌱", colors: ["#74b957", "#345a9d"], image: "", styles: ["Simulation", "Casual"], mins: 30, url: "https://kosmaki.github.io/ROG-Games-3/games/stardaw-wasm-main/stardew-wasm-main/stardew-valley.html" },
-    { title: "Brotato", desc: "Arena survival with waves of enemies, quick builds and chaotic upgrades.", emoji: "🥔", colors: ["#e8b35c", "#9e442d"], image: "", styles: ["Action", "Roguelite"], mins: 15, url: "https://kosmaki.github.io/ROG-Games-4/games/BrotatoWeb-main/BrotatoWeb-main/index.html" },
-    { title: "Eaglercraft", desc: "A browser-based block-building sandbox inspired by voxel adventures.", emoji: "🧊", colors: ["#6acb72", "#3264a3"], image: "", styles: ["Sandbox", "Adventure"], mins: 30, url: "https://kosmaki.github.io/ROG-Games-4/games/eaglercraft-26.2.html" },
-    { title: "Minesweeper Plus", desc: "Clear the board by using number clues to avoid hidden mines.", emoji: "💣", colors: ["#6da7e8", "#34405f"], image: "", styles: ["Puzzle", "Classic"], mins: 10, url: "https://kosmaki.github.io/ROG-Games-4/games/minesweeperplus/minesweeperplus/MinesweeperPlus.html" },
-    { title: "Raft", desc: "A survival adventure focused on scavenging, crafting and ocean exploration.", emoji: "🛟", colors: ["#36b7c8", "#24516b"], image: "", styles: ["Survival", "Adventure"], mins: 30, url: "https://kosmaki.github.io/ROG-Games-4/games/raft/raft/index.html" },
-    { title: "Super Mario Bros. Remastered", desc: "A colorful side-scrolling platform adventure.", emoji: "🍄", colors: ["#e84646", "#2566c8"], image: "", styles: ["Platformer", "Classic"], mins: 15, url: "https://kosmaki.github.io/ROG-Games-4/games/smb-remastered/smb-remastered/SMB1R.html" },
-    { title: "Untitled Goose Game", desc: "Cause harmless chaos as a mischievous goose in a village.", emoji: "🪿", colors: ["#d8d0ad", "#5a8654"], image: "", styles: ["Stealth", "Comedy"], mins: 20, url: "https://kosmaki.github.io/ROG-Games-4/games/untitled-goose-game-main/untitled-goose-game-main/index.html" },
-    { title: "Clustertruck", desc: "Leap between speeding trucks in a physics-based platform challenge.", emoji: "🚚", colors: ["#f5a623", "#c64b34"], image: "", styles: ["Platformer", "Skill"], mins: 10, url: "https://kosmaki.github.io/ROG-Games-5/games/Clustertruck-Port-main/Clustertruck-Port-main/index.html" },
-    { title: "Geometry Dash", desc: "Time jumps to the beat and dodge obstacles in a rhythm platformer.", emoji: "🔺", colors: ["#a54dff", "#21c9c3"], image: "", styles: ["Rhythm", "Platformer"], mins: 5, url: "https://kosmaki.github.io/ROG-Games-5/games/GeometryDash/index.html" },
-    { title: "Baldi's Basics", desc: "A quirky school-themed survival challenge with retro visuals.", emoji: "📏", colors: ["#d6ce68", "#3d7548"], image: "", styles: ["Horror", "Comedy"], mins: 10, url: "https://kosmaki.github.io/ROG-Games-5/games/baldi-remaster/baldi-remaster/index.html" }
+    { title: "Stardew Valley", desc: "Build a farm, grow crops, meet neighbors and explore at your own pace.", emoji: "🌱", colors: ["#74b957", "#345a9d"], image: "", styles: ["Simulation", "Casual"], mins: 30, url: "https://kosmaki.github.io/ROG-Games-3/games/stardaw-wasm-main/stardew-wasm-main/stardew-valley.html", source: "https://github.com/kosmaki/ROG-Games-3/blob/main/games/stardaw-wasm-main/stardew-wasm-main/stardew-valley.html" },
+    { title: "Brotato", desc: "Arena survival with waves of enemies, quick builds and chaotic upgrades.", emoji: "🥔", colors: ["#e8b35c", "#9e442d"], image: "", styles: ["Action", "Roguelite"], mins: 15, url: "https://kosmaki.github.io/ROG-Games-4/games/BrotatoWeb-main/BrotatoWeb-main/index.html", source: "https://github.com/kosmaki/ROG-Games-4/blob/main/games/BrotatoWeb-main/BrotatoWeb-main/index.html" },
+    { title: "Eaglercraft", desc: "A browser-based block-building sandbox inspired by voxel adventures.", emoji: "🧊", colors: ["#6acb72", "#3264a3"], image: "", styles: ["Sandbox", "Adventure"], mins: 30, url: "https://kosmaki.github.io/ROG-Games-4/games/eaglercraft-26.2.html", source: "https://github.com/kosmaki/ROG-Games-4/blob/main/games/eaglercraft-26.2.html" },
+    { title: "Minesweeper Plus", desc: "Clear the board by using number clues to avoid hidden mines.", emoji: "💣", colors: ["#6da7e8", "#34405f"], image: "", styles: ["Puzzle", "Classic"], mins: 10, url: "https://kosmaki.github.io/ROG-Games-4/games/minesweeperplus/minesweeperplus/MinesweeperPlus.html", source: "https://github.com/kosmaki/ROG-Games-4/blob/main/games/minesweeperplus/minesweeperplus/MinesweeperPlus.html" },
+    { title: "Raft", desc: "A survival adventure focused on scavenging, crafting and ocean exploration.", emoji: "🛟", colors: ["#36b7c8", "#24516b"], image: "", styles: ["Survival", "Adventure"], mins: 30, url: "https://kosmaki.github.io/ROG-Games-4/games/raft/raft/index.html", source: "https://github.com/kosmaki/ROG-Games-4/blob/main/games/raft/raft/index.html" },
+    { title: "Super Mario Bros. Remastered", desc: "A colorful side-scrolling platform adventure.", emoji: "🍄", colors: ["#e84646", "#2566c8"], image: "", styles: ["Platformer", "Classic"], mins: 15, url: "https://kosmaki.github.io/ROG-Games-4/games/smb-remastered/smb-remastered/SMB1R.html", source: "https://github.com/kosmaki/ROG-Games-4/blob/main/games/smb-remastered/smb-remastered/SMB1R.html" },
+    { title: "Untitled Goose Game", desc: "Cause harmless chaos as a mischievous goose in a village.", emoji: "🪿", colors: ["#d8d0ad", "#5a8654"], image: "", styles: ["Stealth", "Comedy"], mins: 20, url: "https://kosmaki.github.io/ROG-Games-4/games/untitled-goose-game-main/untitled-goose-game-main/index.html", source: "https://github.com/kosmaki/ROG-Games-4/blob/main/games/untitled-goose-game-main/untitled-goose-game-main/index.html" },
+    { title: "Clustertruck", desc: "Leap between speeding trucks in a physics-based platform challenge.", emoji: "🚚", colors: ["#f5a623", "#c64b34"], image: "", styles: ["Platformer", "Skill"], mins: 10, url: "https://kosmaki.github.io/ROG-Games-5/games/Clustertruck-Port-main/Clustertruck-Port-main/index.html", source: "https://github.com/kosmaki/ROG-Games-5/blob/main/games/Clustertruck-Port-main/Clustertruck-Port-main/index.html" },
+    { title: "Geometry Dash", desc: "Time jumps to the beat and dodge obstacles in a rhythm platformer.", emoji: "🔺", colors: ["#a54dff", "#21c9c3"], image: "", styles: ["Rhythm", "Platformer"], mins: 5, url: "https://kosmaki.github.io/ROG-Games-5/games/GeometryDash/index.html", source: "https://github.com/kosmaki/ROG-Games-5/blob/main/games/GeometryDash/index.html" },
+    { title: "Baldi's Basics", desc: "A quirky school-themed survival challenge with retro visuals.", emoji: "📏", colors: ["#d6ce68", "#3d7548"], image: "", styles: ["Horror", "Comedy"], mins: 10, url: "https://kosmaki.github.io/ROG-Games-5/games/baldi-remaster/baldi-remaster/index.html", source: "https://github.com/kosmaki/ROG-Games-5/blob/main/games/baldi-remaster/baldi-remaster/index.html" }
   ];
 
   const $ = (id) => document.getElementById(id);
@@ -1645,6 +1650,9 @@
     $("mDesc").textContent = g.desc;
     $("mMeta").textContent = metaText(g);
     $("mMeta").hidden = !$("mMeta").textContent;
+    const source = $("mSource");
+    source.href = g.source || "#";
+    source.hidden = !g.source;
     syncStars();
     overlay.classList.add("open");
   }
@@ -1775,6 +1783,9 @@
     $("bpDArt").textContent = g.image ? "" : g.emoji;
     $("bpDTitle").textContent = g.title;
     $("bpDDesc").textContent = g.desc;
+    const source = $("bpDSource");
+    source.href = g.source || "#";
+    source.hidden = !g.source;
     const chip = $("bpDChip");
     chip.textContent = g.url ? "Ready to play" : "Coming soon";
     chip.classList.toggle("ready", !!g.url);
