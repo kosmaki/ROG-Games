@@ -1487,7 +1487,7 @@
 
   const gradient = (g) => `linear-gradient(135deg, ${g.colors[0]}, ${g.colors[1]})`;
   /* Game image if set, with the gradient underneath as a fallback */
-  const bg = (g) => g.image ? `url("${g.image}") center / cover no-repeat, ${gradient(g)}` : gradient(g);
+  const bg = (g, wide = false) => { const art = wide ? (g.heroImage || g.image) : g.image; return art ? `url("${art}") center / cover no-repeat, ${gradient(g)}` : gradient(g); };
 
   /* ---------- Blurred page background (one layer per game) ---------- */
   const layers = games.map((g) => {
