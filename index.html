@@ -283,6 +283,10 @@
 
   /* ---------- Card (shared) ---------- */
   .card {
+    appearance: none;
+    -webkit-appearance: none;
+    text-align: left;
+    color: inherit;
     position: relative;
     display: flex;
     align-items: center;
@@ -497,6 +501,13 @@
     will-change: transform;
   }
   .bp-card {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
     flex-shrink: 0;
     height: var(--ch);
     aspect-ratio: 2 / 3;
@@ -1469,21 +1480,40 @@
     window.addEventListener(ev, () => Sound.unlock(), { once: true }));
 
 
-  /* Original illustrated cover art: poster + wide hero composition, generated locally as SVG. */
+  /* Cover artwork: use real game cover images where available, with original non-emoji art as a reliable fallback. */
   function coverArt(g, wide = false) {
     const [c1, c2] = g.colors || ["#7c5cff", "#161b36"];
-    const title = String(g.title || "ROG").replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
-    const emoji = g.emoji || "🎮";
+    const esc = (value) => String(value || "").replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+    const title = esc(g.title || "ROG");
     const w = wide ? 1200 : 640, h = wide ? 520 : 900;
-    const fontSize = wide ? 76 : 58;
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient><radialGradient id="r"><stop stop-color="#fff" stop-opacity=".42"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><rect width="${w}" height="${h}" fill="#0b0d14"/><rect width="${w}" height="${h}" fill="url(#g)" opacity=".9"/><circle cx="${w*.76}" cy="${h*.28}" r="${h*.5}" fill="url(#r)"/><path d="M0 ${h*.72} L${w*.38} ${h*.35} L${w*.56} ${h*.57} L${w*.82} ${h*.25} L${w} ${h*.42} V${h} H0Z" fill="#080b16" opacity=".55"/><rect x="${w*.055}" y="${h*.055}" width="${w*.89}" height="${h*.89}" rx="${wide?34:28}" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="3"/><text x="${w/2}" y="${h*(wide?.52:.48)}" text-anchor="middle" dominant-baseline="middle" font-size="${wide?160:210}" font-family="Arial,sans-serif">${emoji}</text><text x="${w/2}" y="${h*(wide?.79:.76)}" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-weight="800" font-size="${fontSize}" letter-spacing="2">${title}</text><text x="${w/2}" y="${h*(wide?.9:.88)}" text-anchor="middle" fill="#fff" fill-opacity=".8" font-family="Arial,sans-serif" font-size="${wide?24:20}" letter-spacing="8">ROG • GAME LIBRARY</text></svg>`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient><radialGradient id="glow"><stop stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><rect width="${w}" height="${h}" fill="url(#g)"/><circle cx="${w*.78}" cy="${h*.24}" r="${h*.5}" fill="url(#glow)"/><path d="M0 ${h*.76} L${w*.24} ${h*.45} L${w*.43} ${h*.64} L${w*.72} ${h*.28} L${w} ${h*.48} V${h} H0Z" fill="#070914" opacity=".7"/><path d="M${w*.12} ${h*.28} L${w*.28} ${h*.12} L${w*.42} ${h*.28} L${w*.28} ${h*.44}Z" fill="#fff" fill-opacity=".14"/><rect x="${w*.055}" y="${h*.055}" width="${w*.89}" height="${h*.89}" rx="${wide?34:28}" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="3"/><text x="${w*.09}" y="${h*(wide?.69:.67)}" fill="#fff" font-family="Arial,sans-serif" font-weight="900" font-size="${wide?74:55}">${title}</text><text x="${w*.09}" y="${h*(wide?.83:.78)}" fill="#fff" fill-opacity=".78" font-family="Arial,sans-serif" font-size="${wide?23:20}" letter-spacing="5">ROG GAME LIBRARY</text></svg>`;
     return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
   }
-  games.forEach(g => { g.image = coverArt(g, false); g.heroImage = coverArt(g, true); });
+  const STEAM_APP_IDS = {
+    "Plague Inc: Evolved": "246620",
+    "Plants vs. Zombies Portable": "3590",
+    "Five Nights at Freddy's": "319510",
+    "Granny": "962400",
+    "Terraria": "105600",
+    "Stardew Valley": "413150",
+    "Brotato": "1942280",
+    "Raft": "648800",
+    "Untitled Goose Game": "837470",
+    "Clustertruck": "397950",
+    "Geometry Dash": "322170",
+    "Baldi's Basics": "1712830"
+  };
+  games.forEach(g => {
+    g.fallbackImage = coverArt(g, false);
+    g.fallbackHeroImage = coverArt(g, true);
+    const appId = STEAM_APP_IDS[g.title];
+    g.image = appId ? `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/library_600x900.jpg` : g.fallbackImage;
+    g.heroImage = appId ? `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/header.jpg` : g.fallbackHeroImage;
+  });
 
   const gradient = (g) => `linear-gradient(135deg, ${g.colors[0]}, ${g.colors[1]})`;
   /* Game image if set, with the gradient underneath as a fallback */
-  const bg = (g, wide = false) => { const art = wide ? (g.heroImage || g.image) : g.image; return art ? `url("${art}") center / cover no-repeat, ${gradient(g)}` : gradient(g); };
+  const bg = (g, wide = false) => { const art = wide ? (g.heroImage || g.image) : g.image; const fallback = wide ? (g.fallbackHeroImage || g.fallbackImage) : g.fallbackImage; return art ? `url("${art}") center / cover no-repeat, url("${fallback}") center / cover no-repeat, ${gradient(g)}` : `url("${fallback}") center / cover no-repeat, ${gradient(g)}`; };
 
   /* ---------- Blurred page background (one layer per game) ---------- */
   const layers = games.map((g) => {
@@ -1549,7 +1579,8 @@
 
   /* ---------- Build cards ---------- */
   games.forEach((g, i) => {
-    const card = document.createElement("div");
+    const card = document.createElement("button");
+    card.type = "button";
     card.className = "card";
     card.setAttribute("role", "button");
     card.tabIndex = 0;
@@ -1563,7 +1594,6 @@
     card.querySelector(".card-art").style.background = bg(g);
 
     card.addEventListener("click", () => { Sound.open(); openModal(g, i); });
-    card.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); Sound.open(); openModal(g, i); } });
     card.addEventListener("mouseenter", () => { setBg(i); Sound.hover(); });
     card.addEventListener("mouseleave", () => {
       if (!overlay.classList.contains("open")) setBg(-1);
@@ -1572,12 +1602,17 @@
   });
 
   /* Fade cards in as they scroll into view */
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (e.isIntersecting) { e.target.classList.add("visible"); io.unobserve(e.target); }
-    });
-  }, { threshold: 0.1 });
-  document.querySelectorAll(".card").forEach((c) => io.observe(c));
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add("visible"); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll(".card").forEach((c) => io.observe(c));
+  } else {
+    /* Older mobile browsers should still show every card and keep it usable. */
+    document.querySelectorAll(".card").forEach((c) => c.classList.add("visible"));
+  }
 
   /* ---------- Layout toggle: list / grid / capsule ---------- */
   const modes = ["list", "grid", "capsule"];
@@ -1682,13 +1717,13 @@
   });
 
   const bpCards = games.map((g, i) => {
-    const card = document.createElement("div");
+    const card = document.createElement("button");
+    card.type = "button";
     card.className = "bp-card";
     card.setAttribute("role", "button");
     card.tabIndex = 0;
     card.innerHTML = `<span class="bp-fav">★</span><div class="bp-art">${g.image ? "" : g.emoji}</div>`;
     card.querySelector(".bp-art").style.background = bg(g);
-    card.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); card.click(); } });
     card.addEventListener("click", () => {
       if (bpState !== "browse") return;
       if (i === bpIndex) openDetails();
