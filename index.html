@@ -1046,7 +1046,7 @@
   .st-head h2 { font-size: 1.5rem; font-weight: 700; }
   .gauge { position: relative; width: min(390px, 100%); margin: 0 auto; }
   .gauge svg { display: block; width: 100%; }
-  .g-track, .g-fill { fill: none; stroke-width: 14; stroke-linecap: round; }
+  .g-track, .g-fill { fill: none; stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; }
   .g-track { stroke: rgba(255, 255, 255, .1); }
   .g-fill { stroke-dasharray: 100; stroke-dashoffset: 100; filter: drop-shadow(0 0 8px rgba(var(--accent-rgb), .85)); }
   .g-tick { fill: var(--muted); font-size: 9px; font-family: "Chakra Petch", sans-serif; text-anchor: middle; }
@@ -1178,9 +1178,9 @@
     <div class="gauge">
       <svg viewBox="0 0 260 160" aria-hidden="true">
         <defs><linearGradient id="gGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" style="stop-color:var(--accent)"/><stop offset="1" style="stop-color:var(--accent-2)"/></linearGradient></defs>
-        <path class="g-track" d="M30 140 A100 100 0 0 1 230 140" pathLength="100"/>
-        <path class="g-fill" id="gFill" d="M30 140 A100 100 0 0 1 230 140" pathLength="100" stroke="url(#gGrad)"/>
-        <text class="g-tick" x="22" y="158">0</text><text class="g-tick" x="130" y="22">30</text><text class="g-tick" x="240" y="158">1000</text>
+        <path class="g-track" d="M30 140 L80 53.4 L180 53.4 L230 140" pathLength="100"/>
+        <path class="g-fill" id="gFill" d="M30 140 L80 53.4 L180 53.4 L230 140" pathLength="100" stroke="url(#gGrad)"/>
+        <text class="g-tick" x="22" y="158">0</text><text class="g-tick" x="130" y="40">30</text><text class="g-tick" x="240" y="158">1000</text>
       </svg>
       <div class="g-read"><b id="gNum">0</b><span id="gUnit">Mbps</span><em id="gPhase">Ready</em></div>
     </div>
@@ -1332,6 +1332,7 @@
   <div class="player-bar">
     <strong id="pTitle"></strong>
     <div class="btns">
+      <a class="ghost" id="pNewTab" href="#" target="_blank" rel="noopener noreferrer" title="Open game in a new tab" aria-label="Open game in a new tab" style="display:inline-flex;align-items:center;justify-content:center;padding:9px 12px;text-decoration:none;color:inherit"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h7v7"></path><path d="M10 14 21 3"></path><path d="M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"></path></svg></a>
       <button class="ghost" id="fsBtn">Fullscreen</button>
       <button class="ghost" id="exitBtn">✕ Exit</button>
     </div>
@@ -1543,7 +1544,7 @@
     words.forEach(wd => { const l = lines[lines.length-1]; if ((l + " " + wd).trim().length > maxCh && l) lines.push(wd); else lines[lines.length-1] = (l + " " + wd).trim(); });
     const fs = Math.min(wide ? 84 : 76, (wide ? w*.5 : w*.56) / Math.max(4, Math.max(...lines.map(l => l.length)) * .62));
     const ty = h * (wide ? .55 : .68) - (wide ? 0 : (Math.min(3, lines.length) - 1) * fs * .5);
-    const tx = wide ? w*.07 : w*.5, anc = wide ? "start" : "middle";
+    const tx = w*.5, anc = "middle";
     const text = lines.slice(0,3).map((l, i) => `<text x="${tx}" text-anchor="${anc}" y="${ty + i*fs*1.08}" fill="#fff" font-family="Arial,sans-serif" font-weight="900" font-size="${fs.toFixed(0)}" style="paint-order:stroke" stroke="#000" stroke-opacity=".35" stroke-width="6">${esc(l)}</text>`).join("");
     const tag = esc((g.styles || []).join(" · ").toUpperCase());
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient><radialGradient id="glow"><stop stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".6"/></linearGradient></defs><rect width="${w}" height="${h}" fill="url(#g)"/><circle cx="${cx}" cy="${cy}" r="${S*.6}" fill="url(#glow)"/>${art}<rect width="${w}" height="${h}" fill="url(#fade)"/>${text}<text x="${tx}" text-anchor="${anc}" y="${h*(wide?.9:.92)}" fill="#fff" fill-opacity=".8" font-family="Arial,sans-serif" font-weight="700" font-size="${wide?22:20}" letter-spacing="4">${tag}</text></svg>`;
@@ -1828,6 +1829,7 @@
     stopPlaytime();
     startPlaytime(g);
     $("pTitle").textContent = g.title;
+    $("pNewTab").href = g.url || "#"; $("pNewTab").style.display = g.url ? "inline-flex" : "none";
     if (g.url) {
       /* Keep the game on this site in a framed player; allow games to request fullscreen. */
       const frame = document.createElement("iframe");
