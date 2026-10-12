@@ -1366,6 +1366,7 @@
     { title: "Bottle Flip 3D", desc: "Flip a bottle across furniture and platforms, timing each landing to reach the finish without falling.", emoji: "🍾", colors: ["#ffb347", "#d94d66"], image: "", styles: ["Arcade", "Skill"], mins: 5, url: "https://kosmaki.github.io/ROG-Games-2/games/Bottle203D/Bottle%2520Flip%25203D/index.html", source: "https://github.com/kosmaki/ROG-Games-2/blob/main/games/Bottle203D/Bottle%2520Flip%25203D/index.html" },
     { title: "Five Nights at Freddy's", desc: "Work the night shift at a family pizzeria, monitor security cameras, and manage limited power while avoiding roaming animatronics.", emoji: "🐻", colors: ["#6c3434", "#171323"], image: "", styles: ["Horror", "Survival"], mins: 10, url: "https://kosmaki.github.io/ROG-Games-2/games/fnaf/fnaf/index.html", source: "https://github.com/kosmaki/ROG-Games-2/blob/main/games/fnaf/fnaf/index.html" },
     { title: "Granny", desc: "Escape a locked house by searching for keys and useful objects, solving the route out, and moving quietly so Granny does not hear you. Steam store summary: single-player stealth horror with several difficulty settings.", emoji: "🏚️", colors: ["#6e7d58", "#242a22"], image: "", styles: ["Horror", "Stealth"], mins: 10, url: "https://kosmaki.github.io/ROG-Games-2/games/granny-main/granny-main/index.html", source: "https://github.com/kosmaki/ROG-Games-2/blob/main/games/granny-main/granny-main/index.html" },
+    { title: "Granny: Chapter Two", desc: "Escape a new house while avoiding Granny and Grandpa, searching for items, and solving puzzles to find a way out.", emoji: "🏚️", colors: ["#6e7d58", "#242a22"], image: "", styles: ["Horror", "Stealth"], mins: 15, url: "https://kosmaki.github.io/ROG-Games/games/granny-2-main/index.html", source: "https://github.com/kosmaki/ROG-Games/blob/main/games/granny-2-main/index.html" },
     { title: "Terraria", desc: "Explore a 2D world, dig for resources, craft equipment, build shelters, and discover enemies and hidden places.", emoji: "⛏️", colors: ["#4aa7e8", "#244b39"], image: "", styles: ["Adventure", "Sandbox"], mins: 45, url: "https://kosmaki.github.io/ROG-Games-2/games/terraria-wasm-build/index.html", source: "https://github.com/kosmaki/ROG-Games-2/blob/main/games/terraria-wasm-build/index.html" },
     { title: "Global Strike", desc: "This game entry is currently unavailable.", emoji: "🎯", colors: ["#e45c3a", "#302b42"], image: "", styles: ["Action", "Shooter"], mins: 15, url: "" },
     { title: "Stardew Valley", desc: "Leave city life behind to restore a farm, grow crops, raise animals, make friends, and explore nearby caves.", emoji: "🌱", colors: ["#74b957", "#345a9d"], image: "", styles: ["Simulation", "Casual"], mins: 30, url: "https://kosmaki.github.io/ROG-Games-3/games/stardaw-wasm-main/stardew-wasm-main/stardew-valley.html", source: "https://github.com/kosmaki/ROG-Games-3/blob/main/games/stardaw-wasm-main/stardew-wasm-main/stardew-valley.html" },
@@ -1546,6 +1547,7 @@
     "Plants vs. Zombies Portable": "3590",
     "Five Nights at Freddy's": "319510",
     "Granny": "962400",
+    "Granny: Chapter Two": "1205040",
     "Terraria": "105600",
     "Stardew Valley": "413150",
     "Brotato": "1942280",
@@ -1559,8 +1561,8 @@
     g.fallbackImage = coverArt(g, false);
     g.fallbackHeroImage = coverArt(g, true);
     const appId = STEAM_APP_IDS[g.title];
-    g.image = appId && g.title !== "Granny" ? `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/library_600x900.jpg` : g.fallbackImage;
-    g.heroImage = appId && g.title !== "Granny" ? `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/header.jpg` : g.fallbackHeroImage;
+    g.image = appId ? `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appId}/library_600x900.jpg` : g.fallbackImage;
+    g.heroImage = appId ? `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appId}/header.jpg` : g.fallbackHeroImage;
   });
 
   const gradient = (g) => `linear-gradient(135deg, ${g.colors[0]}, ${g.colors[1]})`;
