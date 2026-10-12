@@ -1319,6 +1319,7 @@
     { title: "Void Dodger",  desc: "Pilot a tiny ship through a rain of rocks that gets faster the longer you live. How long can you last?", emoji: "🚀", colors: ["#7c5cff", "#2a1a7e"], image: "", styles: ["Arcade", "Skill"], mins: 5, sizeMB: 0.01, url: "games/void-dodger.html" },
     { title: "Brick Breaker", desc: "Bounce the ball, smash every brick, clear levels. Mouse, touch or arrow keys. Aim your shots with the paddle edge.", emoji: "🧱", colors: ["#ff5c8a", "#7e1f45"], image: "", styles: ["Arcade", "Skill"], mins: 10, sizeMB: 0.01, url: "games/brick-breaker.html" },
     { title: "Memory Flip",  desc: "Flip cards and find all eight matching pairs in as few moves as you can. A relaxed brain-teaser.", emoji: "🧠", colors: ["#4ade80", "#14693a"], image: "", styles: ["Puzzle", "Casual"], mins: 3, sizeMB: 0.01, url: "games/memory-flip.html" },
+    { title: "Open Golf", desc: "Open-source 3D mini golf by Michael Gerdes (MIT licence). Opens the author's own web version in a new tab; works best in Chrome.", emoji: "⛳", colors: ["#22c55e", "#14532d"], image: "", styles: ["Sports", "Casual"], mins: 20, sizeMB: 20, url: "https://mgerdes.github.io/minigolf.html", newTab: true },
   ];
 
   const $ = (id) => document.getElementById(id);
@@ -1588,7 +1589,13 @@
   function launchGame(g) {
     $("pTitle").textContent = g.title;
     stage.innerHTML = "";
-    if (g.url) {
+    if (g.url && g.newTab) {
+      window.open(g.url, "_blank", "noopener");
+      stage.innerHTML = `<div class="empty"><div>
+        <div style="font-size:3rem;margin-bottom:12px">${g.emoji}</div>
+        <strong style="color:#fff">${g.title}</strong> opened in a new tab.<br>
+        <a href="${g.url}" target="_blank" rel="noopener" style="color:var(--accent)">Open it again</a></div></div>`;
+    } else if (g.url) {
       const frame = document.createElement("iframe");
       frame.src = g.url;
       frame.allow = "fullscreen; autoplay; gamepad";
