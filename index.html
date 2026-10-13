@@ -131,19 +131,23 @@
   .bp-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px -8px rgba(var(--accent2-rgb), .75); }
 
   .help-btn { width: 40px; height: 40px; padding: 0; border-radius: 12px; font-size: 1.15rem; font-weight: 800; }
-  .question-modal { width: min(560px, 100%); }
-  .question-form { display: grid; gap: 14px; }
-  .question-form label { display: grid; gap: 7px; color: var(--text); font-size: .9rem; font-weight: 650; }
-  .question-form input, .question-form textarea {
-    width: 100%; border: 1px solid rgba(255,255,255,.14); border-radius: 12px;
-    padding: 12px 14px; color: var(--text); background: rgba(5,7,14,.58);
-    font: inherit; outline: none;
+  .question-modal { width: min(900px, 96vw); height: min(88vh, 920px); display: flex; flex-direction: column; }
+  .question-modal .modal-body { display: flex; flex-direction: column; flex: 1; min-height: 0; padding: 16px; }
+  .question-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+  .question-head h2 { margin: 0; font-size: 1.35rem; }
+  .question-head-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .question-head-actions a, .question-head-actions button { display: inline-grid; place-items: center; padding: 9px 12px; border-radius: 10px; font-size: .82rem; text-decoration: none; }
+  .question-embed-wrap { flex: 1; min-height: 0; width: 100%; overflow: hidden; border-radius: 14px; background: #fff; }
+  .question-embed { display: block; width: 100%; height: 100%; min-height: 560px; border: 0; background: #fff; }
+  .question-note { display: block; margin-top: 9px; color: var(--muted); font-size: .78rem; line-height: 1.4; }
+  @media (max-width: 600px) {
+    .question-modal { width: 96vw; height: 90dvh; }
+    .question-modal .modal-body { padding: 10px; }
+    .question-head { align-items: flex-start; }
+    .question-head-actions { gap: 5px; }
+    .question-head-actions a, .question-head-actions button { padding: 8px; }
+    .question-embed { min-height: 62dvh; }
   }
-  .question-form textarea { min-height: 120px; resize: vertical; }
-  .question-form input:focus, .question-form textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(var(--accent-rgb),.16); }
-  .question-note { display:block; color: var(--muted); font-size: .82rem; line-height: 1.45; margin-top: 4px; }
-  .question-status { min-height: 1.2em; color: var(--accent-2) !important; font-size: .9rem; margin: 0 !important; }
-  .question-trap { position: absolute !important; left: -10000px !important; width: 1px !important; height: 1px !important; overflow: hidden !important; }
 
 
   /* ---------- Settings panel ---------- */
@@ -1317,32 +1321,21 @@
 </div>
 
 
-<!-- Ask-a-question panel: the recipient email is never included in page source. -->
+<!-- Google Form opens in a custom, responsive modal window. -->
 <div class="overlay question-overlay" id="questionOverlay" aria-hidden="true">
   <section class="modal question-modal" role="dialog" aria-modal="true" aria-labelledby="questionTitle">
     <div class="modal-body">
-      <h2 id="questionTitle">Ask a question</h2>
-      <p>Send a question about ROG Games. Please don’t include passwords or other sensitive information.</p>
-      <form class="question-form" id="questionForm">
-        <label>Your name (optional)
-          <input name="name" type="text" maxlength="80" autocomplete="name" placeholder="Name">
-        </label>
-        <label>Your email (optional, if you want a reply)
-          <input name="email" type="email" maxlength="160" autocomplete="email" placeholder="you@example.com">
-        </label>
-        <label>Your question
-          <textarea name="question" required maxlength="3000" placeholder="What would you like to ask?"></textarea>
-        </label>
-        <label class="question-trap" aria-hidden="true">Leave this empty
-          <input name="_gotcha" type="text" tabindex="-1" autocomplete="off">
-        </label>
-        <small class="question-note">Your email address is not shown on the website. Secure email delivery needs a form endpoint configured by the site owner.</small>
-        <p class="question-status" id="questionStatus" role="status" aria-live="polite"></p>
-        <div class="actions">
-          <button class="play" id="questionSubmit" type="submit">Send question</button>
-          <button class="ghost" id="questionCancel" type="button">Close</button>
+      <div class="question-head">
+        <h2 id="questionTitle">Ask a question</h2>
+        <div class="question-head-actions">
+          <a class="ghost" href="https://forms.gle/wSoGBdMQ2WHWRm1n6" target="_blank" rel="noopener noreferrer">Open separately ↗</a>
+          <button class="ghost" id="questionCancel" type="button" aria-label="Close question window">✕</button>
         </div>
-      </form>
+      </div>
+      <div class="question-embed-wrap">
+        <iframe class="question-embed" id="questionFrame" src="https://forms.gle/wSoGBdMQ2WHWRm1n6" title="ROG Games question form" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="clipboard-write">Loading Google Form…</iframe>
+      </div>
+      <small class="question-note">The form is provided by Google. Your email address is not displayed on this website.</small>
     </div>
   </section>
 </div>
@@ -1435,9 +1428,6 @@
 <footer>© <span id="year"></span> ROG</footer>
 
 <script>
-  /* Set this to the non-secret form endpoint from your Formspree dashboard, e.g. https://formspree.io/f/abcdefgh.
-     Do not put a recipient email address here; Formspree keeps the target address in its dashboard. */
-  const QUESTION_FORM_ENDPOINT = "";
   /* ============================================================
      ADD YOUR GAMES HERE
      - title / desc / emoji / colors: how the game looks
@@ -2896,54 +2886,26 @@
   window.addEventListener("online", renderEstimates);
 
 
-  /* ---------- Ask-a-question form ---------- */
+  /* ---------- Google Form modal ---------- */
   (function () {
     const overlay = $("questionOverlay");
-    const form = $("questionForm");
-    const status = $("questionStatus");
-    const submit = $("questionSubmit");
     const open = () => {
       overlay.classList.add("open");
       overlay.setAttribute("aria-hidden", "false");
-      status.textContent = "";
-      const q = form.querySelector('[name="question"]');
-      if (q) q.focus();
+      document.body.classList.add("question-open");
+      $("questionCancel").focus();
     };
     const close = () => {
       overlay.classList.remove("open");
       overlay.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("question-open");
+      $("questionBtn").focus();
     };
     $("questionBtn").addEventListener("click", open);
     $("questionCancel").addEventListener("click", close);
     overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && overlay.classList.contains("open")) close();
-    });
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (form.querySelector('[name="_gotcha"]').value) return;
-      if (!QUESTION_FORM_ENDPOINT || !/^https:\/\/formspree\.io\/f\/[A-Za-z0-9]+$/.test(QUESTION_FORM_ENDPOINT)) {
-        status.textContent = "Email forwarding isn’t connected yet. The site owner must add the private form endpoint.";
-        return;
-      }
-      submit.disabled = true;
-      submit.textContent = "Sending…";
-      status.textContent = "";
-      try {
-        const response = await fetch(QUESTION_FORM_ENDPOINT, {
-          method: "POST",
-          body: new FormData(form),
-          headers: { Accept: "application/json" }
-        });
-        if (!response.ok) throw new Error("Form submission failed");
-        form.reset();
-        status.textContent = "Question sent — thank you!";
-      } catch (err) {
-        status.textContent = "Couldn’t send the question. Please try again later.";
-      } finally {
-        submit.disabled = false;
-        submit.textContent = "Send question";
-      }
     });
   })();
 
