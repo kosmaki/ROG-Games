@@ -1087,11 +1087,8 @@
   .g-read span { color: var(--muted); }
   .g-read em { display: block; margin-top: 4px; font-style: normal; font-weight: 600; color: var(--accent-2); }
   .st-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 16px; }
-  .tile { position: relative; isolation: isolate; overflow: hidden; border-radius: 10px; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 6px 10px; text-align: center; background: rgba(255, 255, 255, .05); border-bottom: 2px solid rgba(255, 255, 255, .1); transition: border-color .3s, background .3s; }
-  /* Subtle L-shaped corner marks give the speed-test readouts a framed, non-pointed look. */
-  .tile::before { content: ""; position: absolute; inset: 5px; z-index: -1; pointer-events: none; border-radius: 5px; background: linear-gradient(var(--accent-2),var(--accent-2)) left top / 11px 2px no-repeat, linear-gradient(var(--accent-2),var(--accent-2)) left top / 2px 11px no-repeat, linear-gradient(var(--accent-2),var(--accent-2)) right top / 11px 2px no-repeat, linear-gradient(var(--accent-2),var(--accent-2)) right top / 2px 11px no-repeat, linear-gradient(var(--accent-2),var(--accent-2)) left bottom / 11px 2px no-repeat, linear-gradient(var(--accent-2),var(--accent-2)) left bottom / 2px 11px no-repeat, linear-gradient(var(--accent-2),var(--accent-2)) right bottom / 11px 2px no-repeat, linear-gradient(var(--accent-2),var(--accent-2)) right bottom / 2px 11px no-repeat; opacity: .65; transition: opacity .3s; }
+  .tile { position: relative; overflow: hidden; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 6px 10px; text-align: center; background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .1); transition: border-color .3s, background .3s; }
   .tile.on { border-color: var(--accent-2); background: rgba(255, 255, 255, .075); }
-  .tile.on::before { opacity: 1; }
   .tile b { font-size: 1.3rem; font-variant-numeric: tabular-nums; }
   .tile span { font-size: .8rem; color: var(--muted); }
   .tile .hex { margin: 0; width: 46px; height: 40px; }
@@ -1380,7 +1377,6 @@
   <div class="player-bar">
     <strong id="pTitle"></strong>
     <div class="btns">
-      <a class="ghost" id="pNewTab" href="#" target="_blank" rel="noopener noreferrer" title="Open game in a new tab" aria-label="Open game in a new tab" style="display:inline-flex;align-items:center;justify-content:center;padding:9px 12px;text-decoration:none;color:inherit"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h7v7"></path><path d="M10 14 21 3"></path><path d="M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"></path></svg></a>
       <button class="ghost" id="fsBtn">Fullscreen</button>
       <button class="ghost" id="exitBtn">✕ Exit</button>
     </div>
@@ -1433,7 +1429,7 @@
     { title: "Geometry Dash", desc: "Guide a geometric icon through rhythm-driven obstacle courses, jumping and flying in time to the music.", emoji: "🔺", colors: ["#a54dff", "#21c9c3"], image: "", styles: ["Rhythm", "Platformer"], mins: 5, url: "https://kosmaki.github.io/ROG-Games-5/games/GeometryDash/index.html", source: "https://github.com/kosmaki/ROG-Games-5/blob/main/games/GeometryDash/index.html" },
     { title: "Baldi's Basics", desc: "Explore a strange school, collect notebooks, and solve simple problems while trying to avoid the characters roaming the halls.", emoji: "📏", colors: ["#d6ce68", "#3d7548"], image: "", styles: ["Horror", "Comedy"], mins: 10, url: "https://kosmaki.github.io/ROG-Games-5/games/baldi-remaster/clbaldisbasicsremaster.html", source: "https://github.com/kosmaki/ROG-Games-5/blob/main/games/baldi-remaster/clbaldisbasicsremaster.html" },
     { title: "Urban Terror", desc: "Play the browser-based Urban Terror multiplayer game. The first load may download game data, which can then be cached by your browser.", emoji: "🎮", colors: ["#4d7654", "#18251e"], image: "", styles: ["Action", "Shooter", "Multiplayer"], mins: 30, url: "https://ut.pieter.com/", source: "https://ut.pieter.com/" },
-    { title: "Grand Theft Auto V", desc: "Explore Los Santos and Blaine County in Rockstar’s open-world action adventure, with a huge city, countryside, vehicles, missions, and story-driven exploration. This is an unofficial third-party browser link, not an official Rockstar-hosted version.", emoji: "🚗", colors: ["#d6b65b", "#263b30"], image: "https://cdn.cloudflare.steamstatic.com/steam/apps/271590/library_600x900.jpg", heroImage: "https://cdn.cloudflare.steamstatic.com/steam/apps/271590/header.jpg", styles: ["Action", "Open World", "Driving"], mins: 30, url: "https://gta.deloskiyt.pl/", source: "https://gta.deloskiyt.pl/" },
+    { title: "Grand Theft Auto V", externalOnly: true, desc: "Explore Los Santos and Blaine County in Rockstar’s open-world action adventure, with a huge city, countryside, vehicles, missions, and story-driven exploration. This is an unofficial third-party browser link, not an official Rockstar-hosted version.", emoji: "🚗", colors: ["#d6b65b", "#263b30"], image: "https://cdn.cloudflare.steamstatic.com/steam/apps/271590/library_600x900.jpg", heroImage: "https://cdn.cloudflare.steamstatic.com/steam/apps/271590/header.jpg", styles: ["Action", "Open World", "Driving"], mins: 30, url: "https://gta.deloskiyt.pl/", source: "https://gta.deloskiyt.pl/" },
     { title: "Call of Duty: Black Ops", externalOnly: true, desc: "Enter the Cold War in this iconic first-person shooter. Uncover a covert conspiracy through a cinematic campaign, intense combat, and a memorable cast of characters.", emoji: "🎖️", colors: ["#a5a5a5", "#242424"], image: "https://cdn.cloudflare.steamstatic.com/steam/apps/42700/library_600x900.jpg", heroImage: "https://cdn.cloudflare.steamstatic.com/steam/apps/42700/header.jpg", styles: ["Action", "Shooter"], mins: 30, url: "https://vel.gg/", source: "https://vel.gg/" },
     { title: "Rocket League", externalOnly: true, desc: "Drive, boost, and score in this browser-based car-soccer game inspired by Rocket League. Jump into the arena, chase the ball, and try to put it in the net.", emoji: "🚗", colors: ["#00b7ff", "#102b66"], image: "https://cdn.cloudflare.steamstatic.com/steam/apps/252950/library_600x900.jpg", heroImage: "https://cdn.cloudflare.steamstatic.com/steam/apps/252950/header.jpg", styles: ["Sports", "Racing", "Multiplayer"], mins: 30, url: "https://car-soccer.com/", source: "https://car-soccer.com/" },
   ];
@@ -1875,7 +1871,6 @@
     stopPlaytime();
     startPlaytime(g);
     $("pTitle").textContent = g.title;
-    $("pNewTab").href = g.url || "#"; $("pNewTab").style.display = g.url ? "inline-flex" : "none";
     if (g.url) {
       /* Keep the game on this site in a framed player; allow games to request fullscreen. */
       const frame = document.createElement("iframe");
