@@ -1190,7 +1190,7 @@
       <div class="fgroup"><h4>Show</h4><div class="fchips" id="fStatus"></div></div>
       <div class="fgroup"><h4>Sort by</h4>
         <select id="fSort" aria-label="Sort games">
-          <option value="default">Default order</option>
+          <option value="default">Default order (recently played first)</option>
           <option value="az">Name, A to Z</option>
           <option value="za">Name, Z to A</option>
           <option value="short">Shortest playtime first</option>
@@ -1437,6 +1437,10 @@
     { title: "Five Nights at Epstein's", desc: "A parody survival-horror game where you monitor security cameras, use audio cues, and react quickly to survive the nights.", emoji: "📹", colors: ["#32164f", "#090b18"], image: "https://clickergamesaz.io/data/image/FiveNightsatEpsteins.png", heroImage: "https://clickergamesaz.io/data/image/FiveNightsatEpsteins.png", styles: ["Horror", "Survival", "Parody"], mins: 10, url: "https://kosmaki.github.io/ROG-Games/games/clfivenightsatepsteins.html", source: "https://github.com/kosmaki/ROG-Games/blob/main/games/clfivenightsatepsteins.html" },
     { title: "Melon Playground", desc: "Experiment in a physics sandbox by placing characters and objects, building scenes, and seeing how objects react to collisions and other interactions.", emoji: "🍉", colors: ["#42d17b", "#164e63"], image: "https://ozogames.com/uploads/2025/09/Melon-playground-unblocked-image.webp", heroImage: "https://ozogames.com/uploads/2025/09/Melon-playground-unblocked-image.webp", styles: ["Sandbox", "Simulation", "Physics"], mins: 15, url: "https://kosmaki.github.io/ROG-Games/games/melon_playground.html", source: "https://github.com/kosmaki/ROG-Games/blob/main/games/melon_playground.html" },
     { title: "Terraria", desc: "Explore a procedurally generated 2D world, mine resources, craft weapons and equipment, build homes, discover new biomes, and battle enemies and bosses. Play solo or with others.", emoji: "⛏️", colors: ["#48b86a", "#243d77"], image: "https://cdn.cloudflare.steamstatic.com/steam/apps/105600/library_600x900.jpg", heroImage: "https://cdn.cloudflare.steamstatic.com/steam/apps/105600/header.jpg", styles: ["Sandbox", "Adventure", "Crafting", "Survival"], mins: 30, url: "https://kosmaki.github.io/ROG-Games-2/games/terraria-wasm-build/index.html", source: "https://github.com/kosmaki/ROG-Games-2/tree/main/games/terraria-wasm-build" },
+    { title: "Money Run", desc: "Race through the course, collect cash, and avoid obstacles as you try to reach the finish.", emoji: "💸", colors: ["#f5b829", "#c53a34"], image: "", styles: ["Arcade", "Casual"], mins: 5, url: "https://kosmaki.github.io/ROG-Games/games/moneyrun.html", source: "https://github.com/kosmaki/ROG-Games/blob/main/games/moneyrun.html" },
+    { title: "Plants vs. Zombies GOTY", desc: "Defend your home from waves of zombies by planting different types of defensive plants, collecting sun, and building a strategy for each level.", emoji: "🌻", colors: ["#f4d34e", "#4b993b"], image: "", styles: ["Strategy", "Tower Defense"], mins: 20, url: "https://kosmaki.github.io/ROG-Games/games/pvzGOTY.html", source: "https://github.com/kosmaki/ROG-Games/blob/main/games/pvzGOTY.html" },
+    { title: "Totally Accurate Battle Simulator", desc: "Build silly ragdoll armies, choose units from different eras, and watch physics-driven battles play out.", emoji: "⚔️", colors: ["#77d8df", "#b54a5d"], image: "", styles: ["Strategy", "Simulation"], mins: 20, url: "https://kosmaki.github.io/ROG-Games/games/totallyAccurateBattleSimulator.html", source: "https://github.com/kosmaki/ROG-Games/blob/main/games/totallyAccurateBattleSimulator.html" },
+    { title: "CS:GO", desc: "Compete in round-based tactical team matches, coordinating with teammates to complete objectives.", emoji: "🎯", colors: ["#d5a85a", "#24334d"], image: "", styles: ["Action", "Shooter", "Multiplayer"], mins: 30, url: "https://kosmaki.github.io/ROG-Games-3/games/csgo.html", source: "https://github.com/kosmaki/ROG-Games-3/blob/main/games/csgo.html" },
   ];
 
   const $ = (id) => document.getElementById(id);
@@ -1603,6 +1607,57 @@
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient><radialGradient id="glow"><stop stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".6"/></linearGradient></defs><rect width="${w}" height="${h}" fill="url(#g)"/><circle cx="${cx}" cy="${cy}" r="${S*.6}" fill="url(#glow)"/>${art}<rect width="${w}" height="${h}" fill="url(#fade)"/>${text}<text x="${tx}" text-anchor="${anc}" y="${h*(wide?.9:.92)}" fill="#fff" fill-opacity=".8" font-family="Arial,sans-serif" font-weight="700" font-size="${wide?22:20}" letter-spacing="4">${tag}</text></svg>`;
     return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
   }
+  /* Real game artwork and higher-resolution variants sourced from public game/store pages. */
+  const CURATED_ARTWORK = {
+    "Block Blast": {
+      image: "https://play-lh.googleusercontent.com/5FLR-EBlfNvoV9ydZkOMDqRF10nV64XcKdZzW_oQzmz2e8Me9PS5Zncnvviki0J3XumjO2a_lg6_IdwOqwnV=w1024-h1024",
+      heroImage: "https://play-lh.googleusercontent.com/5FLR-EBlfNvoV9ydZkOMDqRF10nV64XcKdZzW_oQzmz2e8Me9PS5Zncnvviki0J3XumjO2a_lg6_IdwOqwnV=w1024-h1024"
+    },
+    "Space Waves": {
+      image: "https://ohgames.io/data/image/game/space-waves/space-waves-2.png",
+      heroImage: "https://ohgames.io/data/image/game/space-waves/space-waves-2.png"
+    },
+    "PvZ2 Gardendless": {
+      image: "https://play-lh.googleusercontent.com/CHs8RA1-LrlwGZIOVY1iE_n6AT852yv1QX_HXJLdwgmRHGHhIpWCviEPbRs_mpJaRE1mhHS4zkhdTo5NUPMG_g=s1024",
+      heroImage: "https://play-lh.googleusercontent.com/OHft5X9qWhMNQWczBLPBndKX538-4AEY0zVCk9OC48WVtRheHbNsrmTkjc4wzRlcdl1fvOvQId5iYp4E8DFOAaI=w1024-h576"
+    },
+    "Solar Smash": {
+      image: "https://play-lh.googleusercontent.com/CEQ7m2k4DA1fh8QKk8ArK5bfQM6_rL0pUHo9XAPslrWloX1AbQ2M6v7uOGQmUm6TtZSGlfvK4LGtB1O5lA551g=s1024",
+      heroImage: "https://play-lh.googleusercontent.com/oOXRBVwGGwUSpTGhUxUJZIVnKbHVLVU9qF49_xnS25n1NcJvXhh9d_DSH2ztTv2W0vqYk966iTZ5IWSl2SdjSA=w1024-h576"
+    },
+    "Spacebar Clicker": {
+      image: "https://tops.games/uploads/thumbnails/s/spacebar-clicker_xlarge.jpg",
+      heroImage: "https://tops.games/uploads/thumbnails/s/spacebar-clicker_xlarge.jpg"
+    },
+    "Bottle Flip 3D": {
+      image: "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/c3/a4/31/c3a43141-56fa-6874-5157-38078bd796ef/AppIcon-1x_U007emarketing-0-7-0-85-220-0.png/1024x1024bb.webp",
+      heroImage: "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/c3/a4/31/c3a43141-56fa-6874-5157-38078bd796ef/AppIcon-1x_U007emarketing-0-7-0-85-220-0.png/1024x1024bb.webp"
+    },
+    "Minecraft 26.2": {
+      image: "https://eaglercraftweb.com/assets/upload/eaglercraft/webp/eaglercraft.webp",
+      heroImage: "https://eaglercraftweb.com/assets/upload/eaglercraft/webp/eaglercraft.webp"
+    },
+    "Minesweeper Plus": {
+      image: "https://img.bluewhiteflag.org/bluewhiteflag-org/images/2025/12/minesweeper-plus.webp",
+      heroImage: "https://img.bluewhiteflag.org/bluewhiteflag-org/images/2025/12/minesweeper-plus.webp"
+    },
+    "Urban Terror": {
+      image: "https://pfimg.b-cdn.net/uploads/Urban_Terror_Resurgence_ogimg_57dcb70d9f.png",
+      heroImage: "https://pfimg.b-cdn.net/uploads/Urban_Terror_Resurgence_ogimg_57dcb70d9f.png"
+    },
+    "Grow a Garden": {
+      image: "https://brainrot-games.io/data/image/grow-a-garden-game.png",
+      heroImage: "https://brainrot-games.io/data/image/grow-a-garden-game.png"
+    },
+    "Melon Playground": {
+      image: "https://img.tapimg.net/market/images/0004e125e3b21bfecdcc26814eff5fdd.png",
+      heroImage: "https://ozogames.com/uploads/2025/09/Melon-playground-unblocked-image.webp"
+    },
+    "Money Run": {
+      image: "https://mir-s3-cdn-cf.behance.net/projects/max_808/29a8b5214326043.Y3JvcCwxNTkzLDEyNDYsMjAxLDIzMg.jpg",
+      heroImage: "https://mir-s3-cdn-cf.behance.net/projects/max_808/29a8b5214326043.Y3JvcCwxNTkzLDEyNDYsMjAxLDIzMg.jpg"
+    }
+  };
   const STEAM_APP_IDS = {
     "Plague Inc: Evolved": "246620",
     "Bloons TD 6": "960090",
@@ -1617,15 +1672,24 @@
     "Untitled Goose Game": "837470",
     "Clustertruck": "397950",
     "Geometry Dash": "322170",
-    "Baldi's Basics": "1712830"
+    "Baldi's Basics": "1712830",
+    "Grand Theft Auto V": "271590",
+    "Call of Duty: Black Ops": "42700",
+    "Rocket League": "252950",
+    "Terraria": "105600",
+    "Plants vs. Zombies GOTY": "3590",
+    "Totally Accurate Battle Simulator": "508440",
+    "CS:GO": "730"
   };
   games.forEach(g => {
+    const curated = CURATED_ARTWORK[g.title] || {};
     g.fallbackImage = coverArt(g, false);
     g.fallbackHeroImage = coverArt(g, true);
     const appId = STEAM_APP_IDS[g.title];
-    // Keep explicitly supplied artwork; only use Steam artwork when a game has no custom image.
-    g.image = g.image || (appId ? `https://cdn.cloudflare.steamstatic.com/steam/apps/${appId}/library_600x900.jpg` : g.fallbackImage);
-    g.heroImage = g.heroImage || (appId ? `https://cdn.cloudflare.steamstatic.com/steam/apps/${appId}/header.jpg` : (g.image || g.fallbackHeroImage));
+    const steamCover = appId ? `https://cdn.cloudflare.steamstatic.com/steam/apps/${appId}/library_600x900.jpg` : "";
+    const steamHero = appId ? `https://cdn.cloudflare.steamstatic.com/steam/apps/${appId}/header.jpg` : "";
+    g.image = curated.image || steamCover || g.image || g.fallbackImage;
+    g.heroImage = curated.heroImage || steamHero || g.heroImage || g.image || g.fallbackHeroImage;
   });
 
   const gradient = (g) => `linear-gradient(135deg, ${g.colors[0]}, ${g.colors[1]})`;
@@ -1674,6 +1738,25 @@
       ? "Based on your last speed test. This is the first load; your browser keeps files for later visits."
       : "A rough guess from your browser's connection info. Run a speed test for a better estimate.";
   }
+  /* ---------- Recently played: newest launch first in Default sort ---------- */
+  const RECENT_PLAY_KEY = "rog-recently-played-v1";
+  let recentGames = [];
+  try {
+    const storedRecent = JSON.parse(localStorage.getItem(RECENT_PLAY_KEY) || "[]");
+    if (Array.isArray(storedRecent)) {
+      recentGames = storedRecent
+        .filter((entry) => entry && typeof entry.title === "string")
+        .sort((a, b) => Number(b.playedAt || 0) - Number(a.playedAt || 0))
+        .slice(0, 100);
+    }
+  } catch (e) {}
+  function markRecentlyPlayed(g) {
+    if (!g || !g.title) return;
+    recentGames = [{ title: g.title, playedAt: Date.now() }, ...recentGames.filter((entry) => entry.title !== g.title)].slice(0, 100);
+    try { localStorage.setItem(RECENT_PLAY_KEY, JSON.stringify(recentGames)); } catch (e) {}
+    if (typeof applyFilter === "function") applyFilter();
+  }
+
   /* ---------- Per-browser playtime tracking ---------- */
   const PLAYTIME_KEY = "rog-playtime-v1";
   let playtimeTotals = {};
@@ -1872,6 +1955,8 @@
 
   /* ---------- Player (shared by normal mode and Big Picture) ---------- */
   function launchGame(g) {
+    if (!g) return;
+    markRecentlyPlayed(g);
     if (g.externalOnly && g.url) {
       window.open(g.url, "_blank", "noopener,noreferrer");
       return;
@@ -2457,8 +2542,10 @@
         && (!F.play.size || F.play.has(playBucket(g)))
         && (F.status === "all" || (F.status === "ready" && g.url) || (F.status === "favs" && Fav.has(g)));
     });
+    const recentRank = new Map(recentGames.map((entry, rank) => [entry.title, rank]));
     const key = {
-      default: (g, i) => i, az: (g) => g.title.toLowerCase(),
+      default: (g, i) => recentRank.has(g.title) ? recentRank.get(g.title) : recentGames.length + i,
+      az: (g) => g.title.toLowerCase(),
       za: (g) => g.title.toLowerCase(),
       short: (g) => playSeconds(g), long: (g) => -playSeconds(g),
     }[F.sort];
