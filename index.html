@@ -424,6 +424,9 @@
   .open-new-tab:hover { background: var(--accent); transform: translateY(-2px); }
   .open-new-tab svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .open-new-tab[hidden] { display: none; }
+  /* Keep the player toolbar's external-link control rounded even if shared button styles change. */
+  #pNewTab { border-radius: 10px; clip-path: none; overflow: hidden; }
+
   .modal-body { padding: 26px 28px 30px; }
   .modal-body h2 { font-size: 1.6rem; margin-bottom: 8px; }
   .modal-body p { color: var(--muted); line-height: 1.55; margin-bottom: 24px; }
@@ -1084,8 +1087,11 @@
   .g-read span { color: var(--muted); }
   .g-read em { display: block; margin-top: 4px; font-style: normal; font-weight: 600; color: var(--accent-2); }
   .st-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 16px; }
-  .tile { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 6px 10px; text-align: center; background: rgba(255, 255, 255, .05); border-bottom: 2px solid rgba(255, 255, 255, .1); transition: border-color .3s; }
-  .tile.on { border-color: var(--accent-2); }
+  .tile { position: relative; isolation: isolate; overflow: hidden; border-radius: 10px; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 6px 10px; text-align: center; background: rgba(255, 255, 255, .05); border-bottom: 2px solid rgba(255, 255, 255, .1); transition: border-color .3s, background .3s; }
+  /* Subtle L-shaped corner marks give the speed-test readouts a framed, non-pointed look. */
+  .tile::before { content: ""; position: absolute; inset: 5px; z-index: -1; pointer-events: none; border-radius: 5px; background: linear-gradient(var(--accent-2),var(--accent-2)) left top / 11px 2px no-repeat, linear-gradient(var(--accent-2),var(--accent-2)) left top / 2px 11px no-repeat, linear-gradient(var(--accent-2),var(--accent-2)) right top / 11px 2px no-repeat, linear-gradient(var(--accent-2),var(--accent-2)) right top / 2px 11px no-repeat, linear-gradient(var(--accent-2),var(--accent-2)) left bottom / 11px 2px no-repeat, linear-gradient(var(--accent-2),var(--accent-2)) left bottom / 2px 11px no-repeat, linear-gradient(var(--accent-2),var(--accent-2)) right bottom / 11px 2px no-repeat, linear-gradient(var(--accent-2),var(--accent-2)) right bottom / 2px 11px no-repeat; opacity: .65; transition: opacity .3s; }
+  .tile.on { border-color: var(--accent-2); background: rgba(255, 255, 255, .075); }
+  .tile.on::before { opacity: 1; }
   .tile b { font-size: 1.3rem; font-variant-numeric: tabular-nums; }
   .tile span { font-size: .8rem; color: var(--muted); }
   .tile .hex { margin: 0; width: 46px; height: 40px; }
