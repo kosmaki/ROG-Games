@@ -1121,6 +1121,20 @@
   .st-row { display: flex; justify-content: space-between; gap: 14px; padding: 7px 0; font-size: .96rem; color: #d6daea; border-bottom: 1px solid rgba(255, 255, 255, .06); }
   .st-row span:last-child { font-weight: 600; color: #fff; font-variant-numeric: tabular-nums; white-space: nowrap; }
   @media (max-width: 460px) { .st-tiles { grid-template-columns: repeat(2, 1fr); } .st { padding: 20px 18px 24px; } }
+
+  /* ---------- Subtle deployment version ---------- */
+  #site-version {
+    position: fixed;
+    left: 12px;
+    bottom: 10px;
+    z-index: 30;
+    color: #808080;
+    opacity: .5;
+    font: 500 11px/1.2 "Chakra Petch", monospace;
+    letter-spacing: .04em;
+    pointer-events: none;
+    user-select: none;
+  }
 </style>
 <script>try { var t = localStorage.getItem("rog-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
@@ -2939,5 +2953,7 @@
     });
   })();
 </script>
+
+<div id="site-version" aria-label="Site version">v0001</div>
 </body>
 </html>
