@@ -117,9 +117,8 @@
         container.className = "unity-mobile";
         canvas.className = "unity-mobile";
 
-        // To lower canvas resolution on mobile devices to gain some
-        // performance, uncomment the following line:
-        // config.devicePixelRatio = 1;
+        // Reduce render resolution on mobile to lower memory and GPU pressure.
+        config.devicePixelRatio = 1;
       } else {
         // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
 
@@ -140,11 +139,11 @@
             fullscreenButton.onclick = () => {
               unityInstance.SetFullscreen(1);
             };
-            // Auto-start fullscreen
-            unityInstance.SetFullscreen(1);
+            // Do not force fullscreen on load; mobile browsers can block it or
+            // disrupt the Unity canvas before the player is ready.
           })
           .catch((message) => {
-            alert(message);
+            unityShowBanner("Game failed to load: " + message, "error");
           });
       };
 
