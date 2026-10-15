@@ -1075,6 +1075,9 @@
   .mode-capsule .meta { display: none; }
   .fav-badge { position: absolute; top: 9px; right: 14px; font-size: 1.15rem; color: #ffd23b; text-shadow: 0 0 12px rgba(255, 210, 59, .8); pointer-events: none; }
   .m-meta { margin: -12px 0 20px; font-size: .9rem; color: var(--accent-2); }
+  .repair-note { display: flex; align-items: center; gap: 7px; width: fit-content; margin: 12px 0 20px; padding: 7px 10px; border: 1px solid rgba(148, 163, 184, .22); border-radius: 9px; background: rgba(255, 255, 255, .045); color: #aeb7ca; font-size: .8rem; }
+  .repair-note[hidden] { display: none; }
+  .repair-note svg { width: 15px; height: 15px; flex: 0 0 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
   .actions .starred, .bp-dactions .starred { color: #ffd23b; }
   .bp-fav { position: absolute; top: 10px; right: 12px; z-index: 2; display: none; font-size: 1.3rem; color: #ffd23b; text-shadow: 0 0 14px rgba(255, 210, 59, .9); }
   .bp-card.fav .bp-fav { display: block; }
@@ -1323,6 +1326,7 @@
     <div class="modal-body">
       <h2 id="mTitle"></h2>
       <p id="mDesc"></p>
+      <p class="repair-note" id="mRepairNote" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a5 5 0 0 0-6.6 6.6L3 18l3 3 5.1-5.1a5 5 0 0 0 6.6-6.6l-3 3-3-3 3-3Z"></path></svg><span>Repaired 10/15/2026 10:22 PM</span></p>
       <p class="m-meta" id="mMeta"></p>
       <a class="source-link" id="mSource" href="#">View game file on GitHub</a>
       <div class="actions">
@@ -1484,7 +1488,7 @@
     { title: "Geometry Dash", desc: "Guide a geometric icon through rhythm-driven obstacle courses, jumping and flying in time to the music.", emoji: "🔺", colors: ["#a54dff", "#21c9c3"], image: "", styles: ["Rhythm", "Platformer"], mins: 5, url: "https://kosmaki.github.io/ROG-Games-5/games/GeometryDash/index.html", source: "https://github.com/kosmaki/ROG-Games-5/blob/main/games/GeometryDash/index.html" },
     { title: "Baldi's Basics", desc: "Explore a strange school, collect notebooks, and solve simple problems while trying to avoid the characters roaming the halls.", emoji: "📏", colors: ["#d6ce68", "#3d7548"], image: "", styles: ["Horror", "Comedy"], mins: 10, url: "https://kosmaki.github.io/ROG-Games-5/games/baldis-basics-remastered/index.html", source: "https://github.com/kosmaki/ROG-Games-5/blob/main/games/baldis-basics-remastered/index.html" },
     { title: "Urban Terror", desc: "Play the browser-based Urban Terror multiplayer game. The first load may download game data, which can then be cached by your browser.", emoji: "🎮", colors: ["#4d7654", "#18251e"], image: "", styles: ["Action", "Shooter", "Multiplayer"], mins: 30, url: "https://ut.pieter.com/", source: "https://ut.pieter.com/" },
-    { title: "Grand Theft Auto V", externalOnly: true, desc: "Explore Los Santos and Blaine County in Rockstar’s open-world action adventure, with a huge city, countryside, vehicles, missions, and story-driven exploration. This is an unofficial third-party browser link, not an official Rockstar-hosted version.", emoji: "🚗", colors: ["#d6b65b", "#263b30"], image: "https://cdn.cloudflare.steamstatic.com/steam/apps/271590/library_600x900.jpg", heroImage: "https://cdn.cloudflare.steamstatic.com/steam/apps/271590/header.jpg", styles: ["Action", "Open World", "Driving"], mins: 30, url: "https://gta.deloskiyt.pl/", source: "https://gta.deloskiyt.pl/" },
+    { title: "Grand Theft Auto V", externalOnly: true, desc: "Explore Los Santos and Blaine County in Rockstar’s open-world action adventure, with a huge city, countryside, vehicles, missions, and story-driven exploration. This is an unofficial third-party browser link, not an official Rockstar-hosted version.", emoji: "🚗", colors: ["#d6b65b", "#263b30"], image: "https://cdn.cloudflare.steamstatic.com/steam/apps/271590/library_600x900.jpg", heroImage: "https://cdn.cloudflare.steamstatic.com/steam/apps/271590/header.jpg", styles: ["Action", "Open World", "Driving"], mins: 30, url: "https://fiveplay.lol/", source: "https://fiveplay.lol/" },
     { title: "Call of Duty: Black Ops", externalOnly: true, desc: "Enter the Cold War in this iconic first-person shooter. Uncover a covert conspiracy through a cinematic campaign, intense combat, and a memorable cast of characters.", emoji: "🎖️", colors: ["#a5a5a5", "#242424"], image: "https://cdn.cloudflare.steamstatic.com/steam/apps/42700/library_600x900.jpg", heroImage: "https://cdn.cloudflare.steamstatic.com/steam/apps/42700/header.jpg", styles: ["Action", "Shooter"], mins: 30, url: "https://vel.gg/", source: "https://vel.gg/" },
     { title: "Rocket League", externalOnly: true, desc: "Drive, boost, and score in this browser-based car-soccer game inspired by Rocket League. Jump into the arena, chase the ball, and try to put it in the net.", emoji: "🚗", colors: ["#00b7ff", "#102b66"], image: "https://cdn.cloudflare.steamstatic.com/steam/apps/252950/library_600x900.jpg", heroImage: "https://cdn.cloudflare.steamstatic.com/steam/apps/252950/header.jpg", styles: ["Sports", "Racing", "Multiplayer"], mins: 30, url: "https://car-soccer.com/", source: "https://car-soccer.com/" },
     { title: "Grow a Garden", desc: "Buy seeds, plant crops, wait for them to grow, then harvest and sell your produce to earn money for better seeds and garden upgrades. Your crops keep growing while you are offline.", emoji: "🌱", colors: ["#61d66b", "#14532d"], image: "https://stealbrainrotonline.io/data/image/game/grow-a-garden/grow-a-garden.png", heroImage: "https://stealbrainrotonline.io/data/image/game/grow-a-garden/grow-a-garden.png", styles: ["Simulation", "Casual", "Tycoon"], mins: 15, url: "https://kosmaki.github.io/ROG-Games/games/clgrowagarden.html", source: "https://github.com/kosmaki/ROG-Games/blob/main/games/clgrowagarden.html" },
@@ -2003,6 +2007,7 @@
     $("mThumb").textContent = g.image ? "" : g.emoji;
     $("mTitle").textContent = g.title;
     $("mDesc").textContent = g.desc;
+    $("mRepairNote").hidden = g.title !== "Jeffery Epstein Basics and Kidnapping";
     const openTab = $("mOpenTab");
     openTab.href = g.url || "#";
     openTab.hidden = !g.url || !!g.externalOnly;
@@ -2954,6 +2959,6 @@
   })();
 </script>
 
-<div id="site-version" aria-label="Site version">v0005</div>
+<div id="site-version" aria-label="Site version">v0008</div>
 </body>
 </html>
