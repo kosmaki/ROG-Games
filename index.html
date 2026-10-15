@@ -1075,6 +1075,9 @@
   .mode-capsule .meta { display: none; }
   .fav-badge { position: absolute; top: 9px; right: 14px; font-size: 1.15rem; color: #ffd23b; text-shadow: 0 0 12px rgba(255, 210, 59, .8); pointer-events: none; }
   .m-meta { margin: -12px 0 20px; font-size: .9rem; color: var(--accent-2); }
+  .repair-note { display: flex; align-items: center; gap: 7px; width: fit-content; margin: 12px 0 20px; padding: 7px 10px; border: 1px solid rgba(148, 163, 184, .22); border-radius: 9px; background: rgba(255, 255, 255, .045); color: #aeb7ca; font-size: .8rem; }
+  .repair-note[hidden] { display: none; }
+  .repair-note svg { width: 15px; height: 15px; flex: 0 0 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
   .actions .starred, .bp-dactions .starred { color: #ffd23b; }
   .bp-fav { position: absolute; top: 10px; right: 12px; z-index: 2; display: none; font-size: 1.3rem; color: #ffd23b; text-shadow: 0 0 14px rgba(255, 210, 59, .9); }
   .bp-card.fav .bp-fav { display: block; }
@@ -1323,6 +1326,7 @@
     <div class="modal-body">
       <h2 id="mTitle"></h2>
       <p id="mDesc"></p>
+      <p class="repair-note" id="mRepairNote" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a5 5 0 0 0-6.6 6.6L3 18l3 3 5.1-5.1a5 5 0 0 0 6.6-6.6l-3 3-3-3 3-3Z"></path></svg><span>Repaired 10/15/2026 10:22 PM</span></p>
       <p class="m-meta" id="mMeta"></p>
       <a class="source-link" id="mSource" href="#">View game file on GitHub</a>
       <div class="actions">
@@ -2003,6 +2007,7 @@
     $("mThumb").textContent = g.image ? "" : g.emoji;
     $("mTitle").textContent = g.title;
     $("mDesc").textContent = g.desc;
+    $("mRepairNote").hidden = g.title !== "Jeffery Epstein Basics and Kidnapping";
     const openTab = $("mOpenTab");
     openTab.href = g.url || "#";
     openTab.hidden = !g.url || !!g.externalOnly;
